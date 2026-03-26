@@ -57,6 +57,7 @@ const Header: React.FC = () => {
               const isPlayButton = link.label === 'Играть';
               const isHowItWorks = link.label === 'Как это работает?';
               const isPricing = link.label === 'Цены';
+              const isAdventures = link.label === 'Приключения';
               
               return (
                 <button
@@ -72,6 +73,8 @@ const Header: React.FC = () => {
                       document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
                     } else if (isPricing) {
                       document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' });
+                    } else if (isAdventures) {
+                      document.getElementById('adventures')?.scrollIntoView({ behavior: 'smooth' });
                     }
                   }}
                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
@@ -112,12 +115,13 @@ const Header: React.FC = () => {
         </div>
       </div>
 
-      <nav className="md:hidden border-t border-[#334155]">
+<nav className="md:hidden border-t border-[#334155]">
         <div className="flex flex-col px-4 py-2 gap-1">
           {navLinks.map((link) => {
             const isPlayButton = link.label === 'Играть';
             const isHowItWorks = link.label === 'Как это работает?';
             const isPricing = link.label === 'Цены';
+            const isAdventures = link.label === 'Приключения';
             
             return (
               <button
@@ -133,6 +137,8 @@ const Header: React.FC = () => {
                     document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
                   } else if (isPricing) {
                     document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' });
+                  } else if (isAdventures) {
+                    document.getElementById('adventures')?.scrollIntoView({ behavior: 'smooth' });
                   }
                 }}
                 className={`px-4 py-2 rounded-lg text-sm font-medium text-left ${

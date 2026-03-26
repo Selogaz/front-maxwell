@@ -15,7 +15,6 @@
 Выполнено:
 - Все повторяющиеся элементы вынесены в переиспользуемые React-компоненты (Button, Section, Card, Skeleton, ArrowButton, PaginationDots, VideoPlaceholder)
 - Проект собирается через layouts, pages, sections, UI-components
-- Разметка не дублируется по страницам
 
 ### Адаптивность
 Выполнено:
@@ -53,7 +52,20 @@ src/
 │   └── page.tsx        # Главная страница
 ├── components/
 │   ├── layouts/        # Header, Footer
-│   ├── sections/       # Greeting, About, Adventures, Advantages, Pricing
+│   ├── sections/       # Секции страниц
+│   │   ├── index/      # Главная страница
+│   │   │   ├── Greeting.tsx
+│   │   │   ├── About.tsx
+│   │   │   ├── Adventures.tsx
+│   │   │   ├── Advantages.tsx
+│   │   │   └── Pricing.tsx
+│   │   └── lk/         # Личный кабинет
+│   │       ├── Sidebar.tsx
+│   │       ├── Tabs/
+│   │       │   ├── Profile.tsx
+│   │       │   └── Settings.tsx
+│   │       └── modals/
+│   │           └── LogoutModal.tsx
 │   └── ui/             # Переиспользуемые компоненты
 ├── context/            # AuthContext для авторизации
 ├── hooks/              # Кастомные хуки для работы с API
@@ -75,7 +87,7 @@ src/
 ## Страницы
 
 - `/` — Главная страница
-- `/lk` — Личный кабинет (заготовка)
+- `/lk` — Личный кабинет
 - `/test-auth` — Тест авторизации
 
 Примечание: проект готов к подключению backend API. Для перехода на реальный API нужно заменить хардкод в сервисах на axios-запросы.

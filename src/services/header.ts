@@ -11,6 +11,7 @@ export const getHeader = async (): Promise<HeaderBlock> => {
     navLinks: [
       { href: '/about', label: 'Как это работает?', isActive: false },
       { href: '/play', label: 'Играть', isActive: false },
+      { href: '/adventures', label: 'Приключения', isActive: false },
       { href: '/price', label: 'Цены', isActive: false },
     ],
     userMenu: {
