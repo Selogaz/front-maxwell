@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'Firenight';
+  src: url('/Firenight-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --color-primary: #337360;
+  --color-accent: #66AAA5;
+  --color-highlight: #DDA852;
+  --color-secondary: #4D4E90;
+  --color-deep: #382975;
+  --color-background: #0F172A;
+  --color-surface: #1E293B;
+  --color-surface-light: #334155;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #94A3B8;
+  --color-text-muted: #64748B;
+  --color-border: #475569;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-text-primary);
+  font-family: var(--font-jost), 'Jost', Arial, sans-serif;
+}
