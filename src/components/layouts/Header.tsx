@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter, usePathname } from 'next/navigation';
 import { useHeader } from '@/hooks/useHeader';
 import { useAuth } from '@/context/AuthContext';
 import LoginModal from '@/components/ui/LoginModal';
@@ -12,9 +13,12 @@ import ResetPasswordModal from '@/components/ui/ResetPasswordModal';
 const Header: React.FC = () => {
   const { data, loading, error } = useHeader();
   const { isAuthenticated } = useAuth();
+  const router = useRouter();
+  const pathname = usePathname();
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
   const [isResetPasswordOpen, setIsResetPasswordOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   if (loading) {
     return (
@@ -45,16 +49,28 @@ const Header: React.FC = () => {
   const handleNavClick = (linkId: string) => {
     if (linkId === 'play') {
       if (isAuthenticated) {
-        window.location.href = '/lk';
+        router.push('/lk');
       } else {
         setIsLoginOpen(true);
       }
     } else if (linkId === 'how-it-works') {
-      document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
+      if (pathname !== '/') {
+        router.push('/#about');
+      } else {
+        document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
+      }
     } else if (linkId === 'pricing') {
-      document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' });
+      if (pathname !== '/') {
+        router.push('/#pricing');
+      } else {
+        document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' });
+      }
     } else if (linkId === 'adventures') {
-      document.getElementById('adventures')?.scrollIntoView({ behavior: 'smooth' });
+      if (pathname !== '/') {
+        router.push('/#adventures');
+      } else {
+        document.getElementById('adventures')?.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   };
 
@@ -106,39 +122,49 @@ const Header: React.FC = () => {
             </button>
           )}
 
-          <button className="md:hidden text-white p-2">
+          <button 
+            className="md:hidden text-white p-2"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M4 6H20M4 12H20M4 18H20" />
+              {isMobileMenuOpen ? (
+                <path d="M6 6L18 18M6 18L18 6" />
+              ) : (
+                <path d="M4 6H20M4 12H20M4 18H20" />
+              )}
             </svg>
           </button>
         </div>
       </div>
 
-<nav className="md:hidden border-t border-[#334155]">
-        <div className="flex flex-col px-4 py-2 gap-1">
-          {navLinks.map((link) => {
-            const isPlayButton = link.id === 'play';
-            
-            return (
-              <button
-                key={link.id}
-                onClick={() => {
-                  handleNavClick(link.id);
-                }}
-                className={`px-4 py-2 rounded-lg text-sm font-medium text-left ${
-                  isPlayButton
-                    ? 'bg-[#66AAA5] text-white'
-                    : link.isActive
+      {isMobileMenuOpen && (
+        <nav className="md:hidden border-t border-[#334155]">
+          <div className="flex flex-col px-4 py-2 gap-1">
+            {navLinks.map((link) => {
+              const isPlayButton = link.id === 'play';
+              
+              return (
+                <button
+                  key={link.id}
+                  onClick={() => {
+                    handleNavClick(link.id);
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium text-left ${
+                    isPlayButton
                       ? 'bg-[#66AAA5] text-white'
-                      : 'text-[#94A3B8] hover:text-white hover:bg-[#334155]'
-                }`}
-              >
-                {link.label}
-              </button>
-            );
-          })}
-        </div>
-      </nav>
+                      : link.isActive
+                        ? 'bg-[#66AAA5] text-white'
+                        : 'text-[#94A3B8] hover:text-white hover:bg-[#334155]'
+                  }`}
+                >
+                  {link.label}
+                </button>
+              );
+            })}
+          </div>
+        </nav>
+      )}
 
       <LoginModal
         isOpen={isLoginOpen}

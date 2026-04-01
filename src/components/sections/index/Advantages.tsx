@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Button from '@/components/ui/Button';
 import { Section } from '@/components/ui/Section';
 import { Card } from '@/components/ui/Card';
@@ -14,6 +15,7 @@ import ResetPasswordModal from '@/components/ui/ResetPasswordModal';
 
 const Advantages: React.FC = () => {
   const { data, loading, error } = useAdvantages();
+  const router = useRouter();
   const { isAuthenticated } = useAuth();
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
@@ -21,7 +23,7 @@ const Advantages: React.FC = () => {
 
   const handlePlayClick = () => {
     if (isAuthenticated) {
-      window.location.href = '/lk';
+      router.push('/lk');
     } else {
       setIsLoginOpen(true);
     }

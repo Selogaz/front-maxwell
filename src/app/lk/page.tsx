@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import LKSidebar from '@/components/sections/lk/Sidebar';
 import ProfileTab from '@/components/sections/lk/Tabs/Profile';
@@ -26,6 +27,7 @@ const tabs: Tab[] = [
 
 const LKPage: React.FC = () => {
   const { user, logout } = useAuth();
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState('play');
   const [name, setName] = useState(user?.name || '');
   const [email, setEmail] = useState(user?.email || '');
@@ -42,12 +44,12 @@ const LKPage: React.FC = () => {
   const handleLogout = () => {
     logout();
     setShowLogoutModal(false);
-    window.location.href = '/';
+    router.push('/');
   };
 
   const handleTabChange = (tabId: string) => {
     if (tabId === 'shop') {
-      window.location.href = '/shop';
+      router.push('/shop');
     } else {
       setActiveTab(tabId);
     }
@@ -107,7 +109,7 @@ const LKPage: React.FC = () => {
 
             <div className="flex items-center gap-3">
               <button
-                onClick={() => window.location.href = '/shop'}
+                onClick={() => router.push('/shop')}
                 className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#0F172A] border border-[#475569] hover:border-[#66AAA5] hover:shadow-[0_0_15px_rgba(102,170,165,0.2)] transition-all"
               >
                 <div className="flex items-center gap-1.5">

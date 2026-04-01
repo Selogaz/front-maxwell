@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Button from '@/components/ui/Button';
 import { Section } from '@/components/ui/Section';
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -13,6 +14,7 @@ import ResetPasswordModal from '@/components/ui/ResetPasswordModal';
 
 const Greeting: React.FC = () => {
   const { data, loading, error } = useGreeting();
+  const router = useRouter();
   const { isAuthenticated } = useAuth();
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
@@ -20,7 +22,7 @@ const Greeting: React.FC = () => {
 
   const handlePlayClick = () => {
     if (isAuthenticated) {
-      window.location.href = '/lk';
+      router.push('/lk');
     } else {
       setIsLoginOpen(true);
     }

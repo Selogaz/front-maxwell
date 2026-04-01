@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Button from '@/components/ui/Button';
 import { Section } from '@/components/ui/Section';
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -14,6 +15,7 @@ import ResetPasswordModal from '@/components/ui/ResetPasswordModal';
 
 const Adventures: React.FC = () => {
   const { data, loading, error } = useAdventures();
+  const router = useRouter();
   const { isAuthenticated } = useAuth();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -22,7 +24,7 @@ const Adventures: React.FC = () => {
 
   const handlePlayClick = () => {
     if (isAuthenticated) {
-      window.location.href = '/lk';
+      router.push('/lk');
     } else {
       setIsLoginOpen(true);
     }
