@@ -1,4 +1,5 @@
 export interface NavLink {
+  id: string;
   href: string;
   label: string;
   isActive: boolean;

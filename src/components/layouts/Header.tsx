@@ -42,6 +42,22 @@ const Header: React.FC = () => {
 
   const navLinks = data.navLinks;
 
+  const handleNavClick = (linkId: string) => {
+    if (linkId === 'play') {
+      if (isAuthenticated) {
+        window.location.href = '/lk';
+      } else {
+        setIsLoginOpen(true);
+      }
+    } else if (linkId === 'how-it-works') {
+      document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
+    } else if (linkId === 'pricing') {
+      document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' });
+    } else if (linkId === 'adventures') {
+      document.getElementById('adventures')?.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-[#1E293B]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -54,29 +70,12 @@ const Header: React.FC = () => {
 
           <nav className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => {
-              const isPlayButton = link.label === 'Играть';
-              const isHowItWorks = link.label === 'Как это работает?';
-              const isPricing = link.label === 'Цены';
-              const isAdventures = link.label === 'Приключения';
+              const isPlayButton = link.id === 'play';
               
               return (
                 <button
-                  key={link.label}
-                  onClick={() => {
-                    if (isPlayButton) {
-                      if (isAuthenticated) {
-                        window.location.href = '/lk';
-                      } else {
-                        setIsLoginOpen(true);
-                      }
-                    } else if (isHowItWorks) {
-                      document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
-                    } else if (isPricing) {
-                      document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' });
-                    } else if (isAdventures) {
-                      document.getElementById('adventures')?.scrollIntoView({ behavior: 'smooth' });
-                    }
-                  }}
+                  key={link.id}
+                  onClick={() => handleNavClick(link.id)}
                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                     isPlayButton
                       ? 'bg-[#66AAA5] text-white hover:bg-[#337360] shadow-[0_0_15px_rgba(102,170,165,0.3)] hover:shadow-[0_0_25px_rgba(102,170,165,0.5)]'
@@ -118,28 +117,13 @@ const Header: React.FC = () => {
 <nav className="md:hidden border-t border-[#334155]">
         <div className="flex flex-col px-4 py-2 gap-1">
           {navLinks.map((link) => {
-            const isPlayButton = link.label === 'Играть';
-            const isHowItWorks = link.label === 'Как это работает?';
-            const isPricing = link.label === 'Цены';
-            const isAdventures = link.label === 'Приключения';
+            const isPlayButton = link.id === 'play';
             
             return (
               <button
-                key={link.label}
+                key={link.id}
                 onClick={() => {
-                  if (isPlayButton) {
-                    if (isAuthenticated) {
-                      window.location.href = '/lk';
-                    } else {
-                      setIsLoginOpen(true);
-                    }
-                  } else if (isHowItWorks) {
-                    document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
-                  } else if (isPricing) {
-                    document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' });
-                  } else if (isAdventures) {
-                    document.getElementById('adventures')?.scrollIntoView({ behavior: 'smooth' });
-                  }
+                  handleNavClick(link.id);
                 }}
                 className={`px-4 py-2 rounded-lg text-sm font-medium text-left ${
                   isPlayButton

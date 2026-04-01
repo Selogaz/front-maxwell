@@ -9,10 +9,10 @@ export const getHeader = async (): Promise<HeaderBlock> => {
       height: 40,
     },
     navLinks: [
-      { href: '/about', label: 'Как это работает?', isActive: false },
-      { href: '/play', label: 'Играть', isActive: false },
-      { href: '/adventures', label: 'Приключения', isActive: false },
-      { href: '/price', label: 'Цены', isActive: false },
+      { id: 'how-it-works', href: '/about', label: 'Как это работает?', isActive: false },
+      { id: 'play', href: '/play', label: 'Играть', isActive: false },
+      { id: 'adventures', href: '/adventures', label: 'Приключения', isActive: false },
+      { id: 'pricing', href: '/price', label: 'Цены', isActive: false },
     ],
     userMenu: {
       label: 'Личный кабинет',
