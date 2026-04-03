@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { authService } from '@/services/auth';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -171,7 +172,10 @@ const LoginModal: React.FC<LoginModalProps> = ({
     setErrors({});
 
     try {
-      login({ id: '1', email, name: email.split('@')[0] });
+      await authService.login({ email, password });
+      const meResponse = await authService.getMe();
+      login(meResponse.user);
+
       onClose();
       setEmail('');
       setPassword('');

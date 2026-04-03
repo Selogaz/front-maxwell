@@ -29,13 +29,13 @@ const LKPage: React.FC = () => {
   const { user, logout } = useAuth();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('play');
-  const [name, setName] = useState(user?.name || '');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState(user?.email || '');
   const [password, setPassword] = useState('');
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [balance] = useState(1000);
 
-  const userName = user?.name || 'Тест Пользователь';
+  const userName = user?.email.split('@')[0] || 'Пользователь';
 
   const handleSave = () => {
     console.log('Save changes:', { name, email, password });

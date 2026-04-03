@@ -1,8 +1,7 @@
 export interface User {
   id: string;
   email: string;
-  name: string;
-  avatarUrl?: string;
+  role?: string;
 }
 
 export interface AuthState {
@@ -14,4 +13,5 @@ export interface AuthState {
 export interface AuthContextType extends AuthState {
   login: (user: User) => void;
   logout: () => void;
+  fetchUser: () => Promise<void>;
 }

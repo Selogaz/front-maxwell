@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { authService } from '@/services/auth';
 
 interface RegisterModalProps {
   isOpen: boolean;
@@ -10,13 +11,11 @@ interface RegisterModalProps {
 }
 
 interface FormErrors {
-  name?: string;
   email?: string;
   password?: string;
   confirmPassword?: string;
 }
 
-const MAX_NAME_LENGTH = 100;
 const MAX_EMAIL_LENGTH = 255;
 const MAX_PASSWORD_LENGTH = 128;
 const MIN_PASSWORD_LENGTH = 6;
@@ -27,7 +26,6 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
   onOpenLogin,
 }) => {
   const { login } = useAuth();
-  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -64,20 +62,6 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isOpen]);
-
-  const validateName = (value: string): string | undefined => {
-    if (!value.trim()) {
-      return 'Введите имя';
-    }
-    const invalidChars = /[<>()[\]\\:;]/;
-    if (invalidChars.test(value)) {
-      return 'Используются недопустимые символы';
-    }
-    if (value.length > MAX_NAME_LENGTH) {
-      return 'Превышено максимальное количество символов';
-    }
-    return undefined;
-  };
 
   const validateEmail = (value: string): string | undefined => {
     if (!value.trim()) {
@@ -126,7 +110,6 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
     if (touched[field]) {
       let error: string | undefined;
       switch (field) {
-        case 'name': error = validateName(value); break;
         case 'email': error = validateEmail(value); break;
         case 'password': error = validatePassword(value); break;
         case 'confirmPassword': error = validateConfirmPassword(value); break;
@@ -140,7 +123,6 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
     let value: string;
     let error: string | undefined;
     switch (field) {
-      case 'name': value = name; error = validateName(value); break;
       case 'email': value = email; error = validateEmail(value); break;
       case 'password': value = password; error = validatePassword(value); break;
       case 'confirmPassword': value = confirmPassword; error = validateConfirmPassword(value); break;
@@ -150,26 +132,23 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
   };
 
   const validateAll = () => {
-    const nameError = validateName(name);
     const emailError = validateEmail(email);
     const passwordError = validatePassword(password);
     const confirmError = validateConfirmPassword(confirmPassword);
 
     setTouched({
-      name: true,
       email: true,
       password: true,
       confirmPassword: true,
     });
 
     setErrors({
-      name: nameError,
       email: emailError,
       password: passwordError,
       confirmPassword: confirmError,
     });
 
-    return !nameError && !emailError && !passwordError && !confirmError;
+    return !emailError && !passwordError && !confirmError;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -182,15 +161,23 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
     setIsSubmitting(true);
 
     try {
-      login({ id: '1', email, name });
+      await authService.register({
+        email,
+        password,
+      });
+
+      await authService.login({ email, password });
+      const meResponse = await authService.getMe();
+      login(meResponse.user);
+
       onClose();
-      setName('');
       setEmail('');
       setPassword('');
       setConfirmPassword('');
       setTouched({});
-    } catch {
-      setErrors({ email: 'Ошибка при регистрации' });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Ошибка при регистрации';
+      setErrors({ email: message });
     } finally {
       setIsSubmitting(false);
     }
@@ -224,27 +211,6 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
         <h2 className="text-2xl sm:text-3xl font-firenight text-white text-center mb-6">Регистрация</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="name" className="block text-[#94A3B8] text-sm mb-2">Имя</label>
-            <input
-              type="text"
-              id="name"
-              value={name}
-              onChange={(e) => handleChange('name', e.target.value, setName)}
-              onBlur={() => handleBlur('name')}
-              placeholder="Введите имя"
-              maxLength={MAX_NAME_LENGTH}
-              className={`w-full px-4 py-3 rounded-lg bg-[#0F172A] text-white placeholder-[#64748B]/50 border transition-colors outline-none ${
-                errors.name
-                  ? 'border-red-500 focus:border-red-400'
-                  : 'border-[#475569] focus:border-[#66AAA5]'
-              }`}
-            />
-            {errors.name && (
-              <p className="text-red-400 text-xs mt-1">{errors.name}</p>
-            )}
-          </div>
-
           <div>
             <label htmlFor="reg-email" className="block text-[#94A3B8] text-sm mb-2">Email</label>
             <input

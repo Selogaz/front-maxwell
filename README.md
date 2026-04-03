@@ -33,13 +33,14 @@
 - empty states (Greeting, About, Advantages, Adventures, Pricing)
 - success states **пока не применяется**
 
-### Подготовка к интеграции
+### Авторизация
 Реализовано:
-- API структура с типами, сервисами и хуками для каждой секции
-- API Routes (greeting, header, footer, about, adventures, advantages, pricing)
-- Авторизация через React Context (AuthContext)
-- Глобальное состояние доступно через контекст
-- Структура для интеграции Websocket-логики: **не реализована**
+- API Routes для auth: `/api/auth/register`, `/api/auth/login`, `/api/auth/refresh`, `/api/auth/logout`, `/api/me`
+- AuthService с методами: register, login, logout, refresh, getMe
+- AuthContext с login, logout, fetchUser, user, isAuthenticated
+- LoginModal и RegisterModal с валидацией
+- HttpOnly cookies для авторизации (credentials: 'include')
+- Тестовая страница `/test-auth`
 
 ## Структура проекта
 
@@ -47,6 +48,12 @@
 src/
 ├── app/                 # Next.js App Router
 │   ├── api/            # API Routes
+│   │   ├── auth/       # Auth API
+│   │   │   ├── register/route.ts
+│   │   │   ├── login/route.ts
+│   │   │   ├── refresh/route.ts
+│   │   │   └── logout/route.ts
+│   │   └── me/route.ts
 │   ├── lk/             # Страница личного кабинета
 │   ├── test-auth/      # Тестовая страница авторизации
 │   └── page.tsx        # Главная страница
@@ -73,6 +80,41 @@ src/
 ├── services/           # API сервисы
 └── types/              # TypeScript типы
 ```
+
+## API Авторизации
+
+### Endpoints
+- `POST /api/auth/register` — регистрация
+- `POST /api/auth/login` — вход
+- `POST /api/auth/refresh` — обновление сессии
+- `POST /api/auth/logout` — выход
+- `GET /api/me` — получение текущего пользователя
+
+### Auth Service
+```typescript
+authService.register({ email, password, refCode? })
+authService.login({ email, password })
+authService.logout()
+authService.refresh()
+authService.getMe()
+```
+
+### Тестирование
+1. Запустить `npm run dev`
+2. Открыть `/test-auth` для тестирования авторизации
+3. Использовать `?test=true` для тестового режима (при TEST_MODE = true)
+
+### TEST_MODE
+Для локального тестирования без реальной БД используется TEST_MODE:
+- `TEST_MODE = false` — боевой режим (проверка users в БД)
+- `TEST_MODE = true` — тестовый режим (принимает любые данные)
+
+**Файлы:** register/route.ts, login/route.ts, me/route.ts
+
+**Перед продакшеном:**
+1. Переключить TEST_MODE = false
+2. Удалить блоки `if (TEST_MODE)`
+3. Убрать `?test=true` из test-auth
 
 ## Цветовая схема
 

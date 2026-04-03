@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { User, AuthContextType } from '@/types/auth';
+import { authService } from '@/services/auth';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -9,22 +10,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+  const fetchUser = async () => {
+    try {
+      const response = await authService.getMe();
+      setUser(response.user);
+    } catch {
+      setUser(null);
     }
-    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    fetchUser().finally(() => setIsLoading(false));
   }, []);
 
   const login = (newUser: User) => {
     setUser(newUser);
-    localStorage.setItem('user', JSON.stringify(newUser));
   };
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      await authService.logout();
+    } catch {
+      // Игнорируем ошибки при logout
+    }
     setUser(null);
-    localStorage.removeItem('user');
   };
 
   const value: AuthContextType = {
@@ -33,6 +42,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     isLoading,
     login,
     logout,
+    fetchUser,
   };
 
   return (
