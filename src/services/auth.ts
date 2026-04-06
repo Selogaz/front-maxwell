@@ -1,11 +1,13 @@
 export interface RegisterRequest {
   email: string;
   password: string;
+  name: string;
   refCode?: string;
 }
 
 export interface RegisterResponse {
   id: string;
+  name: string;
   email: string;
   role: string;
   createdAt: string;
@@ -27,6 +29,7 @@ export interface LoginResponse {
 export interface MeResponse {
   user: {
     id: string;
+    name: string;
     email: string;
     role: string;
   };

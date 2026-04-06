@@ -11,10 +11,13 @@ interface RegisterModalProps {
 }
 
 interface FormErrors {
+  name?: string;
   email?: string;
   password?: string;
   confirmPassword?: string;
 }
+
+const MAX_NAME_LENGTH = 50;
 
 const MAX_EMAIL_LENGTH = 255;
 const MAX_PASSWORD_LENGTH = 128;
@@ -26,6 +29,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
   onOpenLogin,
 }) => {
   const { login } = useAuth();
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -105,11 +109,26 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
     return undefined;
   };
 
+  const validateName = (value: string): string | undefined => {
+    if (!value.trim()) {
+      return 'Введите имя';
+    }
+    if (value.length > MAX_NAME_LENGTH) {
+      return 'Превышено максимальное количество символов';
+    }
+    const invalidChars = /[<>()[\]\\:;]/;
+    if (invalidChars.test(value)) {
+      return 'Используются недопустимые символы';
+    }
+    return undefined;
+  };
+
   const handleChange = (field: string, value: string, setter: React.Dispatch<React.SetStateAction<string>>) => {
     setter(value);
     if (touched[field]) {
       let error: string | undefined;
       switch (field) {
+        case 'name': error = validateName(value); break;
         case 'email': error = validateEmail(value); break;
         case 'password': error = validatePassword(value); break;
         case 'confirmPassword': error = validateConfirmPassword(value); break;
@@ -123,6 +142,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
     let value: string;
     let error: string | undefined;
     switch (field) {
+      case 'name': value = name; error = validateName(value); break;
       case 'email': value = email; error = validateEmail(value); break;
       case 'password': value = password; error = validatePassword(value); break;
       case 'confirmPassword': value = confirmPassword; error = validateConfirmPassword(value); break;
@@ -132,23 +152,26 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
   };
 
   const validateAll = () => {
+    const nameError = validateName(name);
     const emailError = validateEmail(email);
     const passwordError = validatePassword(password);
     const confirmError = validateConfirmPassword(confirmPassword);
 
     setTouched({
+      name: true,
       email: true,
       password: true,
       confirmPassword: true,
     });
 
     setErrors({
+      name: nameError,
       email: emailError,
       password: passwordError,
       confirmPassword: confirmError,
     });
 
-    return !emailError && !passwordError && !confirmError;
+    return !nameError && !emailError && !passwordError && !confirmError;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -161,16 +184,18 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
     setIsSubmitting(true);
 
     try {
-      await authService.register({
+      const registerResponse = await authService.register({
         email,
         password,
+        name,
       });
 
       await authService.login({ email, password });
       const meResponse = await authService.getMe();
-      login(meResponse.user);
+      login({ ...meResponse.user, name: registerResponse.name });
 
       onClose();
+      setName('');
       setEmail('');
       setPassword('');
       setConfirmPassword('');
@@ -211,6 +236,27 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
         <h2 className="text-2xl sm:text-3xl font-firenight text-white text-center mb-6">Регистрация</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="reg-name" className="block text-[#94A3B8] text-sm mb-2">Имя</label>
+            <input
+              type="text"
+              id="reg-name"
+              value={name}
+              onChange={(e) => handleChange('name', e.target.value, setName)}
+              onBlur={() => handleBlur('name')}
+              placeholder="Введите ваше имя"
+              maxLength={MAX_NAME_LENGTH}
+              className={`w-full px-4 py-3 rounded-lg bg-[#0F172A] text-white placeholder-[#64748B]/50 border transition-colors outline-none ${
+                errors.name
+                  ? 'border-red-500 focus:border-red-400'
+                  : 'border-[#475569] focus:border-[#66AAA5]'
+              }`}
+            />
+            {errors.name && (
+              <p className="text-red-400 text-xs mt-1">{errors.name}</p>
+            )}
+          </div>
+
           <div>
             <label htmlFor="reg-email" className="block text-[#94A3B8] text-sm mb-2">Email</label>
             <input

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-type UserData = { id: string; email: string; password: string; role: string; createdAt: string };
+type UserData = { id: string; name: string; email: string; password: string; role: string; createdAt: string };
 
 // TEST_MODE: true — для локального тестирования без реальной БД
 // TODO: Удалить перед продакшеном
@@ -19,10 +19,11 @@ export async function POST(request: NextRequest) {
 
     if (isTestMode) {
       const body = await request.json();
-      const { email } = body;
+      const { email, name } = body;
 
       return NextResponse.json({
         id: generateId(),
+        name,
         email,
         role: 'user',
         createdAt: new Date().toISOString(),
@@ -32,11 +33,18 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { email, password, refCode } = body;
+    const { email, password, name, refCode } = body;
 
     if (!email || !password) {
       return NextResponse.json(
         { message: 'email and password are required' },
+        { status: 400 }
+      );
+    }
+
+    if (!name) {
+      return NextResponse.json(
+        { message: 'name is required' },
         { status: 400 }
       );
     }
@@ -59,6 +67,7 @@ export async function POST(request: NextRequest) {
 
     const newUser: UserData = {
       id: generateId(),
+      name,
       email,
       password,
       role: 'user',
@@ -69,6 +78,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       id: newUser.id,
+      name: newUser.name,
       email: newUser.email,
       role: newUser.role,
       createdAt: newUser.createdAt,

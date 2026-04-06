@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-type UserData = { id: string; email: string; password: string; role: string; createdAt: string };
+type UserData = { id: string; name: string; email: string; password: string; role: string; createdAt: string };
 
 // TEST_MODE: true — для локального тестирования без реальной БД
 // TODO: Удалить перед продакшеном

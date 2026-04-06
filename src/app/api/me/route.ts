@@ -12,6 +12,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({
         user: {
           id: 'test-user-id',
+          name: 'Тестовый Пользователь',
           email: 'test@test.com',
           role: 'user',
         },
