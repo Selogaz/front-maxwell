@@ -9,6 +9,7 @@ import LKSidebar from '@/components/sections/lk/Sidebar';
 import ProfileTab from '@/components/sections/lk/Tabs/Profile';
 import SettingsTab from '@/components/sections/lk/Tabs/Settings';
 import LogoutModal from '@/components/sections/lk/modals/LogoutModal';
+import PlayGameModal from '@/components/sections/lk/modals/PlayGameModal';
 import Button from '@/components/ui/Button';
 
 interface Tab {
@@ -33,6 +34,7 @@ const LKPage: React.FC = () => {
   const [email, setEmail] = useState(user?.email || '');
   const [password, setPassword] = useState('');
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showPlayGameModal, setShowPlayGameModal] = useState(false);
   const [balance] = useState(1000);
 
   const userName = user?.name || user?.email.split('@')[0] || 'Пользователь';
@@ -50,6 +52,8 @@ const LKPage: React.FC = () => {
   const handleTabChange = (tabId: string) => {
     if (tabId === 'shop') {
       router.push('/shop');
+    } else if (tabId === 'play') {
+      setShowPlayGameModal(true);
     } else {
       setActiveTab(tabId);
     }
@@ -62,7 +66,7 @@ const LKPage: React.FC = () => {
           <div className="text-center py-12">
             <h3 className="text-2xl font-firenight text-white mb-4">Начать игру</h3>
             <p className="text-[#94A3B8] mb-6">Выберите приключение и погрузитесь в мир Подземелий Максвелла</p>
-            <Button size="lg">Начать приключение</Button>
+            <Button size="lg" onClick={() => setShowPlayGameModal(true)}>Начать приключение</Button>
           </div>
         );
       case 'profile':
@@ -170,6 +174,11 @@ const LKPage: React.FC = () => {
         isOpen={showLogoutModal}
         onClose={() => setShowLogoutModal(false)}
         onConfirm={handleLogout}
+      />
+
+      <PlayGameModal
+        isOpen={showPlayGameModal}
+        onClose={() => setShowPlayGameModal(false)}
       />
     </div>
   );
