@@ -15,6 +15,7 @@
 Выполнено:
 - Все повторяющиеся элементы вынесены в переиспользуемые React-компоненты (Button, Section, Card, Skeleton, ArrowButton, PaginationDots, VideoPlaceholder)
 - Проект собирается через layouts, pages, sections, UI-components
+- Сложные страницы разбиты на секции в `components/sections/<page>/`
 
 ### Адаптивность
 Выполнено:
@@ -64,28 +65,48 @@ src/
 │   └── page.tsx        # Главная страница
 ├── components/
 │   ├── layouts/        # Header, Footer
-│   ├── sections/       # Секции страниц
-│   │   ├── index/      # Главная страница
+│   ├── sections/       # Секции страниц (разбивка по страницам)
+│   │   ├── index/     # Главная страница
 │   │   │   ├── Greeting.tsx
 │   │   │   ├── About.tsx
 │   │   │   ├── Adventures.tsx
 │   │   │   ├── Advantages.tsx
 │   │   │   └── Pricing.tsx
-│   │   └── lk/         # Личный кабинет
-│   │       ├── Sidebar.tsx
-│   │       ├── Tabs/
-│   │       │   ├── Profile.tsx
-│   │       │   └── Settings.tsx
-│   │       └── modals/
-│   │           ├── LogoutModal.tsx
-│   │           └── PlayGameModal.tsx
+│   │   ├── lk/       # Личный кабинет
+│   │   │   ├── Sidebar.tsx
+│   │   │   ├── Tabs/
+│   │   │   │   ├── Profile.tsx
+│   │   │   │   └── Settings.tsx
+│   │   │   └── modals/
+│   │   │       ├── LogoutModal.tsx
+│   │   │       └── PlayGameModal.tsx
+│   │   └── game/      # Игровые страницы
+│   │       ├── CharacterStepsNav.tsx      # Навигация по этапам
+│   │       ├── CharacterStepsMenu.tsx     # Левое меню этапов
+│   │       ├── CharacterStepContent.tsx   # Центральный контент
+│   │       ├── CharacterInfoModal.tsx     # Модальное окно описания
+│   │       ├── CharacterStatsPanel.tsx   # Боковая панель характеристик
+│   │       └── CharacterPreviewCard.tsx   # Карточка персонажа
 │   └── ui/             # Переиспользуемые компоненты
 ├── context/            # AuthContext для авторизации
 ├── hooks/              # Кастомные хуки для работы с API
 ├── lib/                # Утилиты (icons)
 ├── services/           # API сервисы
-└── types/              # TypeScript типы
+└── types/             # TypeScript типы
 ```
+
+## Разбивка страниц на секции
+
+Каждая сложная страница разбита на логические секции в `components/sections/<page>/`:
+
+- **Главная страница** (`index/`) — Greeting, About, Adventures, Advantages, Pricing
+- **Личный кабинет** (`lk/`) — Sidebar, Tabs, Modals
+- **Создание персонажа** (`game/`) — StepsNav, StepsMenu, StepContent, StatsPanel, PreviewCard
+
+Это обеспечивает:
+- Чистоту кода и разделение ответственности
+- Переиспользуемость компонентов
+- Легкость поддержки и тестирования
 
 ## API Авторизации
 
@@ -137,7 +158,7 @@ authService.getMe()
 - `/` — Главная страница
 - `/lk` — Личный кабинет
 - `/game/create` — Создание игры
-- `/game/character` — Создание персонажа
+- `/game/character` — Создание персонажа (6 этапов: Раса, Под раса, Класс, Подкласс, Происхождение, Характеристики)
 - `/game/join` — Присоединение к игре (заглушка)
 - `/game/continue` — Продолжить игру (заглушка)
 - `/test-auth` — Тест авторизации
