@@ -28,10 +28,16 @@ interface UseCharacterReturn {
 }
 
 export const useCharacter = (): UseCharacterReturn => {
-  const [data, setData] = useState<CharacterData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<CharacterData | null>(() => {
+    try {
+      return getCharacterData();
+    } catch {
+      return null;
+    }
+  });
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [currentStep, setCurrentStep] = useState<StepId>('race');
+  const [currentStep, setCurrentStep] = useState<StepId>('name');
 
   const [selection, setSelection] = useState<CharacterSelection>({
     race: null,
@@ -43,23 +49,6 @@ export const useCharacter = (): UseCharacterReturn => {
     gender: null,
     name: '',
   });
-
-  const fetchData = useCallback(async () => {
-    try {
-      setLoading(true);
-      const result = await getCharacterData();
-      setData(result);
-      setError(null);
-    } catch (err) {
-      setError('Не удалось загрузить данные персонажа');
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
 
   const usedPoints = Object.values(selection.stats).reduce((sum, val) => sum + val, 0) - STATS_MIN * 6;
 
@@ -220,6 +209,6 @@ export const useCharacter = (): UseCharacterReturn => {
     resetStats,
     randomizeCharacter,
     canCreateCharacter,
-    refetch: fetchData,
+    refetch: () => {},
   };
 };

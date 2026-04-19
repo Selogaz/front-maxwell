@@ -34,6 +34,19 @@
 - empty states (Greeting, About, Advantages, Adventures, Pricing)
 - success states **пока не применяется**
 
+### Градиенты фона (game/character)
+- Имя (name): h-28 + боковые градиенты + центр
+- Пол (gender): только h-28 + фон #1a1a1a
+- Раса (race): сплошной фон #020106 с картинками race.svg, characteristics.svg, теникмкыс 1.svg
+
+### Компоненты создания персонажа
+- CharacterStepsNav — навигация по этапам
+- CharacterStepsMenu — левое меню
+- CharacterStepContent — контент этапа
+- CharacterRaceStep — экран выбора расы с фоновыми картинками
+- CharacterGenderStep — экран выбора пола с модальным окном
+- CharacterNameStep — экран ввода имени
+
 ### Авторизация
 Реализовано:
 - API Routes для auth: `/api/auth/register`, `/api/auth/login`, `/api/auth/refresh`, `/api/auth/logout`, `/api/me`

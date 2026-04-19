@@ -1,4 +1,4 @@
-export type StepId = 'race' | 'subrace' | 'class' | 'subclass' | 'origin' | 'stats';
+export type StepId = 'name' | 'gender' | 'race' | 'subrace' | 'class' | 'subclass' | 'origin' | 'stats';
 
 export interface CharacterStep {
   id: StepId;
