@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { CharacterSelection, CharacterStats } from '@/types/character';
 
 interface CharacterPreviewCardProps {
@@ -27,7 +28,7 @@ const CharacterPreviewCard: React.FC<CharacterPreviewCardProps> = ({
       <div className="bg-[#1a1a1a] rounded-xl p-3 mb-4">
         <div className="aspect-square rounded-lg bg-[#242424] flex items-center justify-center overflow-hidden">
           {imageUrl ? (
-            <img src={imageUrl} alt="Character" className="w-full h-full object-cover opacity-70" />
+            <Image src={imageUrl} alt="Character" fill className="object-cover opacity-70" unoptimized />
           ) : (
             <svg
               width="80"

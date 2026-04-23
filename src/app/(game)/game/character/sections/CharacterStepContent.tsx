@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import CharacterInfoModal from './CharacterInfoModal';
 import {
   StepId,
@@ -20,7 +21,6 @@ interface CharacterStepContentProps {
   onSelectRace: (id: string) => void;
   onSelectSubRace: (id: string) => void;
   onSelectClass: (id: string) => void;
-  onSelectSubClass: (id: string) => void;
   onSelectOrigin: (id: string) => void;
   onUpdateStats: (stat: keyof CharacterStats, value: number) => void;
   onApplyRecommended: () => void;
@@ -64,7 +64,6 @@ const CharacterStepContent: React.FC<CharacterStepContentProps> = ({
   onSelectRace,
   onSelectSubRace,
   onSelectClass,
-  onSelectSubClass,
   onSelectOrigin,
   onUpdateStats,
   onApplyRecommended,
@@ -103,17 +102,17 @@ const CharacterStepContent: React.FC<CharacterStepContentProps> = ({
       case 'race': return 'Раса';
       case 'subrace': return 'Подраса';
       case 'class': return 'Класс';
-      case 'subclass': return 'Подкласс';
       case 'origin': return 'Происхождение';
-      case 'stats': return 'Заклинания';
+      case 'spells': return 'Заклинания';
+      case 'stats': return 'Характеристики';
       default: return '';
     }
   };
 
   const renderNameStep = () => (
     <div className="flex items-center justify-center w-full h-full">
-      <div className="relative">
-        <img src="/create_char/name/input_name_without_placeholder.svg" alt="" className="w-[439px] h-[210px] pointer-events-none" />
+      <div className="relative w-[439px] h-[210px]">
+        <Image src="/create_char/name/input_name_without_placeholder.svg" alt="" fill className="object-contain pointer-events-none" unoptimized />
         <input 
           type="text" 
           placeholder="Введите имя"
@@ -128,7 +127,7 @@ const CharacterStepContent: React.FC<CharacterStepContentProps> = ({
   const renderGenderStep = () => (
     <div className="flex items-center justify-center">
       <div className="relative w-[439px] h-[295px]">
-        <img src="/create_char/gender/modal.svg" alt="" className="absolute w-[439px] h-[295px] pointer-events-none" />
+        <Image src="/create_char/gender/modal.svg" alt="" fill className="object-contain pointer-events-none" unoptimized />
         <button
           onClick={() => onSetGender?.('male')}
           className="absolute left-23.75 top-21.25 flex flex-col items-center gap-2 transition-all z-10"
@@ -202,8 +201,8 @@ const CharacterStepContent: React.FC<CharacterStepContentProps> = ({
       <div className="bg-[#242424] h-[77px] flex items-center justify-center relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-[#242424] via-[#1a1a1a] to-[#242424]" />
         {imageUrl ? (
-          <img src={imageUrl} alt={name} className="w-full h-full object-contain opacity-70 relative z-10" />
-        ) : (
+            <Image src={imageUrl} alt={name} fill className="object-contain opacity-70 relative z-10" unoptimized />
+          ) : (
           <RaceIcon race={id} className="relative z-10" />
         )}
         <div
@@ -273,13 +272,7 @@ const CharacterStepContent: React.FC<CharacterStepContentProps> = ({
             <path d="M3 12H6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
             <path d="M18 12H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
           </svg>
-        );
-      case 'charisma':
-        return (
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="text-[#EC4899]">
-            <path d="M12 2L15 8L22 9L17 14L18 21L12 18L6 21L7 14L2 9L9 8L12 2Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
-          </svg>
-        );
+);
       default:
         return null;
     }
@@ -376,7 +369,7 @@ const CharacterStepContent: React.FC<CharacterStepContentProps> = ({
       case 'race':
         return (
           <div className="flex items-center justify-center w-full h-full">
-            <img src="/create_char/race/background.svg" alt="" className="w-[800px] h-[500px] pointer-events-none" />
+            <Image src="/create_char/race/background.svg" alt="" width={800} height={500} className="w-[800px] h-[500px] pointer-events-none" unoptimized />
           </div>
         );
 
@@ -426,33 +419,6 @@ const CharacterStepContent: React.FC<CharacterStepContentProps> = ({
                 selection.characterClass?.id === charClass.id,
                 () => onSelectClass(charClass.id),
                 () => openInfoModal(charClass.name, charClass.description, charClass.imageUrl)
-              )
-            )}
-          </div>
-        );
-
-      case 'subclass':
-        if (!selection.characterClass) {
-          return (
-            <div className="bg-[rgba(255,255,255,0.03)] rounded-lg border border-[rgba(255,255,255,0.1)] p-8 text-center mx-4">
-              <p className="text-[#666]">Сначала выберите класс</p>
-            </div>
-          );
-        }
-        const availableSubClasses = data.subClasses.filter(
-          (s) => s.classId === selection.characterClass?.id
-        );
-        return (
-          <div className="grid grid-cols-3 gap-3 px-4">
-            {availableSubClasses.map((subClass) =>
-              renderOptionCard(
-                subClass.id,
-                subClass.name,
-                subClass.description,
-                subClass.imageUrl,
-                selection.subClass?.id === subClass.id,
-                () => onSelectSubClass(subClass.id),
-                () => openInfoModal(subClass.name, subClass.description, subClass.imageUrl)
               )
             )}
           </div>

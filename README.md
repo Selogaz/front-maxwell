@@ -38,12 +38,22 @@
 - Имя (name): h-28 + боковые градиенты + центр
 - Пол (gender): только h-28 + фон #1a1a1a
 - Раса (race): сплошной фон #020106 с картинками race.svg, characteristics.svg, теникмкыс 1.svg
+- Подраса (subrace): аналогично Раса
+- Класс (class): full_class.svg
+- Происхождение (origin): full_origin.svg
+- Характеристики (stats): full_characteristics.svg
+- Заклинания (spells): full_spells.svg
 
 ### Компоненты создания персонажа
-- CharacterStepsNav — навигация по этапам
+- CharacterStepsNav — навигация по этапам (кружочки 36x36)
 - CharacterStepsMenu — левое меню
 - CharacterStepContent — контент этапа
-- CharacterRaceStep — экран выбора расы с фоновыми картинками
+- CharacterRaceStep — экран выбора расы с фоновыми картинками и random кнопкой
+- CharacterSubRaceStep — экран выбора подрасы
+- CharacterClassStep — экран выбора класса
+- CharacterOriginStep — экран выбора происхождения
+- CharacterStatsStep — экран характеристик
+- CharacterSpellsStep — экран заклинаний
 - CharacterGenderStep — экран выбора пола с модальным окном
 - CharacterNameStep — экран ввода имени
 
@@ -68,17 +78,34 @@ src/
 │   │   │   ├── refresh/route.ts
 │   │   │   └── logout/route.ts
 │   │   └── me/route.ts
-│   ├── lk/             # Страница личного кабинета
-│   ├── game/           # Игровые страницы
-│   │   ├── create/    # Создание игры
+│   ├── (game)/game/    # Группа для игровых страниц
 │   │   ├── character/ # Создание персонажа
-│   │   ├── join/      # Присоединение к игре (заглушка)
-│   │   └── continue/  # Продолжить игру (заглушка)
-│   ├── test-auth/     # Тестовая страница авторизации
-│   └── page.tsx        # Главная страница
+│   │   │   └── sections/  # Секции создания персонажа
+│   │   │       ├── CharacterStepsNav.tsx
+│   │   │       ├── CharacterStepsMenu.tsx
+│   │   │       ├── CharacterStepContent.tsx
+│   │   │       ├── CharacterInfoModal.tsx
+│   │   │       ├── CharacterStatsPanel.tsx
+│   │   │       ├── CharacterPreviewCard.tsx
+│   │   │       ├── CharacterNameStep.tsx
+│   │   │       ├── CharacterGenderStep.tsx
+│   │   │       ├── CharacterRaceStep.tsx
+│   │   │       ├── CharacterSubRaceStep.tsx
+│   │   │       ├── CharacterClassStep.tsx
+│   │   │       ├── CharacterOriginStep.tsx
+│   │   │       ├── CharacterStatsStep.tsx
+│   │   │       ├── CharacterSpellsStep.tsx
+│   │   │       └── CharacterCreationHeader.tsx
+│   │   ├── create/page.tsx
+│   │   ├── character/page.tsx
+│   │   ├── join/page.tsx
+│   │   └── continue/page.tsx
+│   ├── lk/page.tsx
+│   ├── test-auth/page.tsx
+│   └── page.tsx
 ├── components/
 │   ├── layouts/        # Header, Footer
-│   ├── sections/       # Секции страниц (разбивка по страницам)
+│   ├── sections/       # Секции страниц
 │   │   ├── index/     # Главная страница
 │   │   │   ├── Greeting.tsx
 │   │   │   ├── About.tsx
@@ -93,13 +120,6 @@ src/
 │   │   │   └── modals/
 │   │   │       ├── LogoutModal.tsx
 │   │   │       └── PlayGameModal.tsx
-│   │   └── game/      # Игровые страницы
-│   │       ├── CharacterStepsNav.tsx      # Навигация по этапам
-│   │       ├── CharacterStepsMenu.tsx     # Левое меню этапов
-│   │       ├── CharacterStepContent.tsx   # Центральный контент
-│   │       ├── CharacterInfoModal.tsx     # Модальное окно описания
-│   │       ├── CharacterStatsPanel.tsx   # Боковая панель характеристик
-│   │       └── CharacterPreviewCard.tsx   # Карточка персонажа
 │   └── ui/             # Переиспользуемые компоненты
 ├── context/            # AuthContext для авторизации
 ├── hooks/              # Кастомные хуки для работы с API
@@ -171,9 +191,19 @@ authService.getMe()
 - `/` — Главная страница
 - `/lk` — Личный кабинет
 - `/game/create` — Создание игры
-- `/game/character` — Создание персонажа (6 этапов: Раса, Под раса, Класс, Подкласс, Происхождение, Характеристики)
+- `/game/character` — Создание персонажа (8 этапов: Имя, Пол, Раса, Подраса, Класс, Происхождение, Характеристики, Заклинания)
 - `/game/join` — Присоединение к игре (заглушка)
 - `/game/continue` — Продолжить игру (заглушка)
 - `/test-auth` — Тест авторизации
+
+### Этапы создания персонажа
+1. **Имя** — ввод имени персонажа
+2. **Пол** — выбор пола (male/female)
+3. **Раса** — выбор расы (CharacterRaceStep)
+4. **Подраса** — выбор подрасы (CharacterSubRaceStep)
+5. **Класс** — выбор класса (CharacterClassStep)
+6. **Происхождение** — выбор происхождения (CharacterOriginStep)
+7. **Характеристики** — распределение очков (CharacterStatsStep)
+8. **Заклинания** — выбор заклинаний (CharacterSpellsStep)
 
 Примечание: проект готов к подключению backend API. Для перехода на реальный API нужно заменить хардкод в сервисах на axios-запросы.

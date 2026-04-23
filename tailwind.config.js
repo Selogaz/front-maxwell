@@ -7,7 +7,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        firenight: ['Firenight', 'serif'],
+        firenight: ['var(--font-firenight)', 'sans-serif'],
         jost: ['var(--font-jost)', 'sans-serif'],
       },
     },

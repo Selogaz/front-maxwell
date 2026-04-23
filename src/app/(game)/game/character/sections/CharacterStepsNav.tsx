@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { CharacterStep, StepId } from '@/types/character';
 
 interface CharacterStepsNavProps {
@@ -16,9 +17,9 @@ const stepLabels: Record<string, string> = {
   race: 'Раса',
   subrace: 'Подраса',
   class: 'Класс',
-  subclass: 'Подкласс',
   origin: 'Происхождение',
-  stats: 'Заклинания',
+  spells: 'Заклинания',
+  stats: 'Характеристики',
 };
 
 
@@ -35,7 +36,7 @@ const CharacterStepsNav: React.FC<CharacterStepsNavProps> = ({
   };
 
   return (
-    <div className={`flex items-center justify-center gap-1 bg-[#020106] px-4 py-2 ${className}`}>
+    <div className={`flex items-center justify-start gap-1 bg-[#020106] pl-85 pr-4 py-2 ${className}`}>
       {steps.map((step, index) => (
         <React.Fragment key={step.id}>
           <button
@@ -49,7 +50,7 @@ const CharacterStepsNav: React.FC<CharacterStepsNavProps> = ({
           >
             <div
               className={`
-                w-6 h-6 rounded-full flex items-center justify-center font-firenight text-sm
+                w-9 h-9 rounded-full flex items-center justify-center font-firenight text-base
                 transition-all duration-200 border-2 bg-transparent
                 ${
                   step.id === currentStep
@@ -61,7 +62,7 @@ const CharacterStepsNav: React.FC<CharacterStepsNavProps> = ({
               `}
             >
               {index < currentStepIndex ? (
-                <img src="/create_char/checkmark.svg" alt="" className="w-4 h-4" />
+                <Image src="/create_char/checkmark.svg" alt="" width={20} height={20} className="w-5 h-5" unoptimized />
               ) : null}
             </div>
             <span

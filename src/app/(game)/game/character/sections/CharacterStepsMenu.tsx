@@ -24,10 +24,10 @@ const CharacterStepsMenu: React.FC<CharacterStepsMenuProps> = ({
         return selection.subRace !== null;
       case 'class':
         return selection.characterClass !== null;
-      case 'subclass':
-        return selection.subClass !== null;
       case 'origin':
         return selection.origin !== null;
+      case 'spells':
+        return true;
       case 'stats':
         return true;
       default:

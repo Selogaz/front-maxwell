@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import Button from '@/components/ui/Button';
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -13,15 +14,32 @@ import CharacterPreviewCard from './sections/CharacterPreviewCard';
 import CharacterNameStep from './sections/CharacterNameStep';
 import CharacterGenderStep from './sections/CharacterGenderStep';
 import CharacterRaceStep from './sections/CharacterRaceStep';
+import CharacterSubRaceStep from './sections/CharacterSubRaceStep';
+import CharacterClassStep from './sections/CharacterClassStep';
+import CharacterOriginStep from './sections/CharacterOriginStep';
+import CharacterStatsStep from './sections/CharacterStatsStep';
+import CharacterSpellsStep from './sections/CharacterSpellsStep';
 
 const ContinueButton: React.FC<{ onClick: () => void; disabled?: boolean }> = ({ onClick, disabled }) => (
   <button
     type="button"
     onClick={onClick}
     disabled={disabled}
-    className="h-auto transition-all hover:opacity-90 disabled:opacity-50 cursor-pointer"
+    className="transition-all hover:opacity-90 disabled:opacity-50 cursor-pointer relative w-48 h-12"
   >
-    <img src="/create_char/Continue_svg.svg" alt="Продолжить" className="h-auto w-auto pointer-events-none" />
+    <Image src="/create_char/Continue_svg.svg" alt="Продолжить" fill className="object-contain pointer-events-none" unoptimized />
+  </button>
+);
+
+const BackButton: React.FC<{ onClick: () => void; disabled?: boolean }> = ({ onClick, disabled }) => (
+  <button
+    type="button"
+    onClick={onClick}
+    disabled={disabled}
+    className="transition-all hover:opacity-90 disabled:opacity-50 cursor-pointer relative w-12 h-12"
+  >
+    <Image src="/create_char/back_button_background.svg" alt="" fill className="object-contain pointer-events-none" unoptimized />
+    <Image src="/create_char/back_button.svg" alt="Назад" width={20} height={20} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" unoptimized />
   </button>
 );
 
@@ -38,7 +56,6 @@ const CreateCharacterPage: React.FC = () => {
     selectRace,
     selectSubRace,
     selectClass,
-    selectSubClass,
     selectOrigin,
     updateStats,
     applyRecommendedStats,
@@ -154,7 +171,6 @@ return (
             onSelectRace={selectRace}
             onSelectSubRace={selectSubRace}
             onSelectClass={selectClass}
-            onSelectSubClass={selectSubClass}
             onSelectOrigin={selectOrigin}
             onUpdateStats={updateStats}
             onApplyRecommended={applyRecommendedStats}
@@ -167,7 +183,17 @@ return (
             isLastStep={currentStepIndex === allSteps.length - 1}
           />
         ) : currentStep === 'race' ? (
-          <CharacterRaceStep />
+          <CharacterRaceStep onRandomize={randomizeCharacter} />
+        ) : currentStep === 'subrace' ? (
+          <CharacterSubRaceStep />
+        ) : currentStep === 'class' ? (
+          <CharacterClassStep />
+        ) : currentStep === 'origin' ? (
+          <CharacterOriginStep />
+        ) : currentStep === 'stats' ? (
+          <CharacterStatsStep />
+        ) : currentStep === 'spells' ? (
+          <CharacterSpellsStep />
         ) : (
           <div className="max-w-7xl w-full px-6 flex flex-col overflow-hidden">
             {isNameStep ? (
@@ -179,7 +205,6 @@ return (
                 onSelectRace={selectRace}
                 onSelectSubRace={selectSubRace}
                 onSelectClass={selectClass}
-                onSelectSubClass={selectSubClass}
                 onSelectOrigin={selectOrigin}
                 onUpdateStats={updateStats}
                 onApplyRecommended={applyRecommendedStats}
@@ -214,7 +239,6 @@ return (
                         onSelectRace={selectRace}
                         onSelectSubRace={selectSubRace}
                         onSelectClass={selectClass}
-                        onSelectSubClass={selectSubClass}
                         onSelectOrigin={selectOrigin}
                         onUpdateStats={updateStats}
                         onApplyRecommended={applyRecommendedStats}
@@ -247,7 +271,11 @@ return (
         )}
       </div>
 
-      <div className="h-[80px] flex justify-center items-center absolute bottom-10 w-full">
+      <div className="h-[80px] flex justify-center items-center absolute bottom-10 w-full z-[100] gap-8">
+        <BackButton 
+          onClick={handlePrev} 
+          disabled={currentStepIndex === 0}
+        />
         <ContinueButton 
           onClick={handleNext} 
           disabled={false}

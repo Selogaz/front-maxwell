@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Jost } from "next/font/google";
+import { firenight } from "./fonts";
 import "./globals.css";
 import Providers from "./providers";
 
@@ -20,7 +21,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ru" className={jost.variable}>
+    <html lang="ru" className={`${jost.variable} ${firenight.variable}`}>
       <body className="min-h-full flex flex-col antialiased">
         <Providers>
           {children}

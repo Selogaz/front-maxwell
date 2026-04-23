@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 
 interface CharacterInfoModalProps {
   isOpen: boolean;
@@ -41,7 +42,7 @@ const CharacterInfoModal: React.FC<CharacterInfoModalProps> = ({
 
         <div className="bg-[#0F172A] p-8 flex items-center justify-center">
           {imageUrl ? (
-            <img src={imageUrl} alt={title} className="w-32 h-32 object-cover rounded-xl" />
+            <Image src={imageUrl} alt={title} width={128} height={128} className="w-32 h-32 object-cover rounded-xl" unoptimized />
           ) : (
             <div className="w-32 h-32 bg-[#334155] rounded-xl flex items-center justify-center">
               <svg width="48" height="48" viewBox="0 0 48 48" fill="none" className="text-[#475569]">

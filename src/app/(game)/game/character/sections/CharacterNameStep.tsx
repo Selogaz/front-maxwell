@@ -12,7 +12,6 @@ interface CharacterNameStepProps {
   onSelectRace: (race: string) => void;
   onSelectSubRace: (subrace: string) => void;
   onSelectClass: (charClass: string) => void;
-  onSelectSubClass: (subclass: string) => void;
   onSelectOrigin: (origin: string) => void;
   onUpdateStats: (stat: keyof CharacterStats, value: number) => void;
   onApplyRecommended: () => void;
@@ -34,7 +33,6 @@ const CharacterNameStep: React.FC<CharacterNameStepProps> = ({
   onSelectRace,
   onSelectSubRace,
   onSelectClass,
-  onSelectSubClass,
   onSelectOrigin,
   onUpdateStats,
   onApplyRecommended,
@@ -56,7 +54,6 @@ const CharacterNameStep: React.FC<CharacterNameStepProps> = ({
         onSelectRace={onSelectRace}
         onSelectSubRace={onSelectSubRace}
         onSelectClass={onSelectClass}
-        onSelectSubClass={onSelectSubClass}
         onSelectOrigin={onSelectOrigin}
         onUpdateStats={onUpdateStats}
         onApplyRecommended={onApplyRecommended}

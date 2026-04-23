@@ -21,6 +21,7 @@
   --color-text-secondary: #94A3B8;
   --color-text-muted: #64748B;
   --color-border: #475569;
+  --font-firenight: 'Firenight';
 }
 
 body {
@@ -28,4 +29,8 @@ body {
   color: var(--color-text-primary);
   font-family: var(--font-jost), 'Jost', Arial, sans-serif;
   overflow: hidden;
+}
+
+.font-firenight {
+  font-family: var(--font-firenight, 'Firenight'), sans-serif !important;
 }

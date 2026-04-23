@@ -5,9 +5,9 @@ export const getCharacterData = (): CharacterData => ({
     { id: 'race', number: 1, title: 'Раса', icon: 'user' },
     { id: 'subrace', number: 2, title: 'Под раса', icon: 'star' },
     { id: 'class', number: 3, title: 'Класс', icon: 'sword' },
-    { id: 'subclass', number: 4, title: 'Под класс', icon: 'shield' },
-    { id: 'origin', number: 5, title: 'Происхождение', icon: 'compass' },
-    { id: 'stats', number: 6, title: 'Характеристики', icon: 'chart' },
+    { id: 'origin', number: 4, title: 'Происхождение', icon: 'compass' },
+    { id: 'stats', number: 5, title: 'Характеристики', icon: 'chart' },
+    { id: 'spells', number: 6, title: 'Заклинания', icon: 'sparkles' },
   ],
   races: [
     { id: 'human', name: 'Человек', description: 'Самые распространённые существа в мире.', modifier: { strength: 1, agility: 1, constitution: 1, intelligence: 1, wisdom: 1, charisma: 1 } },
