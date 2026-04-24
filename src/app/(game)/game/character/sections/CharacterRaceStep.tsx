@@ -34,10 +34,10 @@ const CharacterRaceStep: React.FC<CharacterRaceStepProps> = ({ onRandomize }) =>
       {onRandomize && (
         <button
           onClick={onRandomize}
-          className="absolute left-163 top-65 z-50 w-10 h-10 transition-all hover:opacity-80 cursor-pointer"
+          className="absolute left-164 top-66 z-50 w-8.75 h-8.75 transition-all hover:opacity-80 cursor-pointer"
         >
           <Image src="/create_char/random_background.svg" alt="" fill className="object-contain pointer-events-none" unoptimized />
-          <Image src="/create_char/random.svg" alt="Случайная раса" width={24} height={24} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" unoptimized />
+          <Image src="/create_char/random.svg" alt="Случайная раса" width={30} height={28} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" unoptimized />
         </button>
       )}
       <Image 

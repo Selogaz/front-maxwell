@@ -272,10 +272,12 @@ return (
       </div>
 
       <div className="h-[80px] flex justify-center items-center absolute bottom-10 w-full z-[100] gap-8">
-        <BackButton 
-          onClick={handlePrev} 
-          disabled={currentStepIndex === 0}
-        />
+        {currentStep !== 'name' && (
+          <BackButton 
+            onClick={handlePrev} 
+            disabled={currentStepIndex === 0}
+          />
+        )}
         <ContinueButton 
           onClick={handleNext} 
           disabled={false}

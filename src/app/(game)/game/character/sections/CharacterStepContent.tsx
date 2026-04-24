@@ -116,7 +116,7 @@ const CharacterStepContent: React.FC<CharacterStepContentProps> = ({
         <input 
           type="text" 
           placeholder="Введите имя"
-          className="absolute top-25 left-18 w-[357px] h-[48px] bg-transparent text-[#FCE9CE] text-[15px] font-firenight pl-12 outline-none placeholder-[#E0D0B8]"
+          className="absolute top-25 left-18 w-[357px] h-[48px] bg-transparent text-[#FCE9CE] text-[15px] font-jost pl-12 outline-none placeholder-[#FCE9CE]"
           onChange={(e) => onSetName?.(e.target.value)}
           defaultValue={selection.name}
         />
