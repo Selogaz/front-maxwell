@@ -36,7 +36,7 @@ const CharacterStepsNav: React.FC<CharacterStepsNavProps> = ({
   };
 
   return (
-    <div className={`flex items-center justify-start gap-1 bg-[#020106] pl-85 pr-4 py-2 ${className}`}>
+    <div className={`flex items-center justify-start gap-1 bg-[#020106] pl-55 pr-4 py-2 ${className}`}>
       {steps.map((step, index) => (
         <React.Fragment key={step.id}>
           <button
@@ -68,7 +68,7 @@ const CharacterStepsNav: React.FC<CharacterStepsNavProps> = ({
             <span
               className={`
                 font-jost text-sm whitespace-nowrap
-                ${step.id === currentStep ? 'text-white' : 'text-[#94A3B8]'}
+                ${step.id === currentStep ? 'text-white' : 'text-white'}
               `}
             >
               {getStepLabel(step.id)}

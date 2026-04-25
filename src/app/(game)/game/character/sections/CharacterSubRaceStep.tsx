@@ -23,7 +23,7 @@ const CharacterSubRaceStep: React.FC = () => {
         alt="" 
         width={0}
         height={0}
-        className="absolute left-80 top-150 -translate-y-1/2 pointer-events-none w-auto h-auto"
+        className="absolute left-55 top-130 -translate-y-1/2 pointer-events-none w-auto h-auto"
         unoptimized
       />
       
@@ -32,7 +32,7 @@ const CharacterSubRaceStep: React.FC = () => {
         alt="" 
         width={0}
         height={0}
-        className="absolute right-80 top-152 -translate-y-1/2 pointer-events-none w-auto h-auto"
+        className="absolute right-50 top-130 -translate-y-1/2 pointer-events-none w-auto h-auto"
         unoptimized
       />
 
@@ -42,7 +42,7 @@ const CharacterSubRaceStep: React.FC = () => {
           alt="" 
           width={1200} 
           height={275} 
-          className="h-[80dvh] w-auto max-w-full object-contain"
+          className="h-[75dvh] w-auto max-w-full object-contain"
           unoptimized
         />
       </div>

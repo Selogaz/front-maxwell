@@ -23,7 +23,7 @@ const CharacterStatsStep: React.FC = () => {
         alt="" 
         width={0}
         height={0}
-        className="absolute left-80 top-150 -translate-y-1/2 pointer-events-none w-auto h-auto"
+        className="absolute left-55 top-130 -translate-y-1/2 pointer-events-none w-auto h-auto"
         unoptimized
       />
 
@@ -32,7 +32,7 @@ const CharacterStatsStep: React.FC = () => {
         alt="" 
         width={0}
         height={0}
-        className="absolute left-90 top-138 -translate-y-1/2 pointer-events-none w-auto h-auto"
+        className="absolute left-65 top-118 -translate-y-1/2 pointer-events-none w-auto h-auto"
         unoptimized
       />
       <Image 
@@ -40,7 +40,7 @@ const CharacterStatsStep: React.FC = () => {
         alt="" 
         width={0}
         height={0}
-        className="absolute left-158 top-113 -translate-y-1/2 pointer-events-none w-auto h-auto"
+        className="absolute left-133 top-93 -translate-y-1/2 pointer-events-none w-auto h-auto"
         unoptimized
       />
       <Image 
@@ -48,7 +48,7 @@ const CharacterStatsStep: React.FC = () => {
         alt="" 
         width={0}
         height={0}
-        className="absolute left-168 top-113 -translate-y-1/2 pointer-events-none w-auto h-auto"
+        className="absolute left-143 top-93 -translate-y-1/2 pointer-events-none w-auto h-auto"
         unoptimized
       />
       <Image 
@@ -56,7 +56,7 @@ const CharacterStatsStep: React.FC = () => {
         alt="" 
         width={0}
         height={0}
-        className="absolute left-168 top-125 -translate-y-1/2 pointer-events-none w-auto h-auto"
+        className="absolute left-143 top-105 -translate-y-1/2 pointer-events-none w-auto h-auto"
         unoptimized
       />
       <Image 
@@ -64,7 +64,7 @@ const CharacterStatsStep: React.FC = () => {
         alt="" 
         width={0}
         height={0}
-        className="absolute left-158 top-125 -translate-y-1/2 pointer-events-none w-auto h-auto"
+        className="absolute left-133 top-105 -translate-y-1/2 pointer-events-none w-auto h-auto"
         unoptimized
       />
       <Image 
@@ -72,7 +72,7 @@ const CharacterStatsStep: React.FC = () => {
         alt="" 
         width={0}
         height={0}
-        className="absolute left-158 top-138 -translate-y-1/2 pointer-events-none w-auto h-auto"
+        className="absolute left-133 top-118 -translate-y-1/2 pointer-events-none w-auto h-auto"
         unoptimized
       />
       <Image 
@@ -80,7 +80,7 @@ const CharacterStatsStep: React.FC = () => {
         alt="" 
         width={0}
         height={0}
-        className="absolute left-168 top-138 -translate-y-1/2 pointer-events-none w-auto h-auto"
+        className="absolute left-143 top-118 -translate-y-1/2 pointer-events-none w-auto h-auto"
         unoptimized
       />
 
@@ -89,7 +89,7 @@ const CharacterStatsStep: React.FC = () => {
         alt="" 
         width={0}
         height={0}
-        className="absolute left-168 top-151 -translate-y-1/2 pointer-events-none w-auto h-auto"
+        className="absolute left-143 top-131 -translate-y-1/2 pointer-events-none w-auto h-auto"
         unoptimized
       />
       <Image 
@@ -97,7 +97,7 @@ const CharacterStatsStep: React.FC = () => {
         alt="" 
         width={0}
         height={0}
-        className="absolute left-158 top-151 -translate-y-1/2 pointer-events-none w-auto h-auto"
+        className="absolute left-133 top-131 -translate-y-1/2 pointer-events-none w-auto h-auto"
         unoptimized
       />
       <Image 
@@ -105,7 +105,7 @@ const CharacterStatsStep: React.FC = () => {
         alt="" 
         width={0}
         height={0}
-        className="absolute left-158 top-163 -translate-y-1/2 pointer-events-none w-auto h-auto"
+        className="absolute left-133 top-143 -translate-y-1/2 pointer-events-none w-auto h-auto"
         unoptimized
       />
       <Image 
@@ -113,7 +113,7 @@ const CharacterStatsStep: React.FC = () => {
         alt="" 
         width={0}
         height={0}
-        className="absolute left-168 top-163 -translate-y-1/2 pointer-events-none w-auto h-auto"
+        className="absolute left-143 top-143 -translate-y-1/2 pointer-events-none w-auto h-auto"
         unoptimized
       />
 
@@ -122,7 +122,7 @@ const CharacterStatsStep: React.FC = () => {
         alt="" 
         width={0}
         height={0}
-        className="absolute right-80 top-152 -translate-y-1/2 pointer-events-none w-auto h-auto"
+        className="absolute right-50 top-130 -translate-y-1/2 pointer-events-none w-auto h-auto"
         unoptimized
       />
 
@@ -132,7 +132,7 @@ const CharacterStatsStep: React.FC = () => {
           alt="" 
           width={1200} 
           height={275} 
-          className="h-[80dvh] w-auto max-w-full object-contain"
+          className="h-[75dvh] w-auto max-w-full object-contain"
           unoptimized
         />
       </div>
