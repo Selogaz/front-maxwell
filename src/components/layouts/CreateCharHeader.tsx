@@ -9,9 +9,9 @@ const CreateCharHeader: React.FC = () => {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-[#020106]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center gap-6">
+      <div className="w-full pl-55 pr-8">
+        <div className="flex items-center h-16">
+          <div className="flex items-center gap-18">
             <Link href="/">
               <div className="flex items-center cursor-pointer">
                 <img src="/full_logo.svg" alt="Подземелья Максвелла" className="h-10 w-auto" />
@@ -25,7 +25,7 @@ const CreateCharHeader: React.FC = () => {
             </button>
           </div>
 
-<nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden md:flex items-center gap-4 ml-auto mr-52">
             <button
               onClick={() => router.push('/lk')}
               className="flex items-center gap-1 p-1.5 rounded-lg text-sm font-medium text-[#94A3B8] hover:text-white hover:bg-[#334155] transition-all"
@@ -46,16 +46,9 @@ const CreateCharHeader: React.FC = () => {
             >
               <img src="/create_char/fast_game.svg" alt="Быстрая игра" className="h-auto w-auto" />
             </button>
-            <button
-              onClick={() => router.push('/lk')}
-              className="flex items-center justify-center transition-all hover:opacity-90"
-              aria-label="Быстрая игра"
-            >
-            </button>
-            
           </nav>
 
-          <button 
+          <button
             className="md:hidden text-white p-2"
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

@@ -25,7 +25,7 @@ const ContinueButton: React.FC<{ onClick: () => void; disabled?: boolean }> = ({
     type="button"
     onClick={onClick}
     disabled={disabled}
-    className="transition-all hover:opacity-90 disabled:opacity-50 cursor-pointer relative w-48 h-12"
+    className="transition-all hover:opacity-90 disabled:opacity-50 cursor-pointer relative w-58 h-17"
   >
     <Image src="/create_char/Continue_svg.svg" alt="Продолжить" fill className="object-contain pointer-events-none" unoptimized />
   </button>
@@ -36,7 +36,7 @@ const BackButton: React.FC<{ onClick: () => void; disabled?: boolean }> = ({ onC
     type="button"
     onClick={onClick}
     disabled={disabled}
-    className="transition-all hover:opacity-90 disabled:opacity-50 cursor-pointer relative w-12 h-12"
+    className="transition-all hover:opacity-90 disabled:opacity-50 cursor-pointer relative w-16.5 h-16.5"
   >
     <Image src="/create_char/back_button_background.svg" alt="" fill className="object-contain pointer-events-none" unoptimized />
     <Image src="/create_char/back_button.svg" alt="Назад" width={20} height={20} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" unoptimized />
@@ -272,10 +272,12 @@ return (
       </div>
 
       <div className="h-[80px] flex justify-center items-center absolute bottom-10 w-full z-[100] gap-8">
-        <BackButton 
-          onClick={handlePrev} 
-          disabled={currentStepIndex === 0}
-        />
+        {currentStep !== 'name' && (
+          <BackButton 
+            onClick={handlePrev} 
+            disabled={currentStepIndex === 0}
+          />
+        )}
         <ContinueButton 
           onClick={handleNext} 
           disabled={false}
