@@ -12,6 +12,9 @@ import CharacterStepContent from './sections/CharacterStepContent';
 import CharacterStatsPanel from './sections/CharacterStatsPanel';
 import CharacterPreviewCard from './sections/CharacterPreviewCard';
 import CharacterNameStep from './sections/CharacterNameStep';
+import CharacterNameStepMobile from './sections/CharacterNameStepMobile';
+import CharacterGenderStepMobile from './sections/CharacterGenderStepMobile';
+import CharacterRaceStepMobile from './sections/CharacterRaceStepMobile';
 import CharacterGenderStep from './sections/CharacterGenderStep';
 import CharacterRaceStep from './sections/CharacterRaceStep';
 import CharacterSubRaceStep from './sections/CharacterSubRaceStep';
@@ -69,10 +72,10 @@ const CreateCharacterPage: React.FC = () => {
   if (loading) {
     return (
       <div className="h-[calc(100vh-64px)] overflow-hidden flex flex-col relative bg-gradient-to-b from-neutral-950 via-neutral-900 to-neutral-950">
-        <div className="absolute top-0 left-0 w-full h-28 bg-gradient-to-b from-neutral-950 to-transparent pointer-events-none -z-10" />
-        <div className="absolute top-28 left-0 w-56 h-[calc(100%-7rem)] bg-gradient-to-r from-neutral-950 to-transparent pointer-events-none -z-10" />
-        <div className="absolute top-28 right-0 w-56 h-[calc(100%-7rem)] bg-gradient-to-l from-neutral-950 to-transparent pointer-events-none -z-10" />
-        <div className="bg-[url('/bg-pattern.png')] opacity-5 absolute inset-0" />
+        <div className="absolute top-0 left-0 w-full h-28 bg-gradient-to-b from-neutral-950 to-transparent pointer-events-none -z-10 hidden md:block" />
+        <div className="absolute top-28 left-0 w-56 h-[calc(100%-7rem)] bg-gradient-to-r from-neutral-950 to-transparent pointer-events-none -z-10 hidden md:block" />
+        <div className="absolute top-28 right-0 w-56 h-[calc(100%-7rem)] bg-gradient-to-l from-neutral-950 to-transparent pointer-events-none -z-10 hidden md:block" />
+        <div className="bg-[url('/bg-pattern.png')] opacity-5 absolute inset-0 hidden md:block" />
         <div className="max-w-7xl mx-auto px-6 pt-28 pb-8">
           <Skeleton width="100%" height="60px" className="mb-6 rounded-xl" />
           <div className="flex justify-center gap-3 mb-8">
@@ -138,31 +141,70 @@ const CreateCharacterPage: React.FC = () => {
   const canContinue = isNameStep ? selection.name : canCreateCharacter;
 
 return (
-<div className="h-[calc(100vh-64px)] flex flex-col overflow-hidden relative">
+<div className="h-[calc(100vh-64px)] flex flex-col overflow-hidden relative bg-[#181818] md:bg-transparent">
    
-      <CharacterStepsNav
-        className="flex-none"
-        steps={allSteps}
-        currentStep={currentStep}
-        onStepChange={setCurrentStep}
-      />
+      <div className="hidden md:block flex-none">
+        <CharacterStepsNav
+          steps={allSteps}
+          currentStep={currentStep}
+          onStepChange={setCurrentStep}
+        />
+      </div>
 
       {currentStep === 'name' && (
-        <>
+        <div className="hidden md:block">
           <div className="h-28 w-full bg-gradient-to-b from-[#020106] to-[#1a1a1a]" />
           <div className="absolute left-0 top-28 w-[54rem] h-[calc(100%-7rem)] bg-gradient-to-r from-[#020106] to-[#1a1a1a] pointer-events-none -z-10" />
           <div className="absolute right-0 top-28 w-[50rem] h-[calc(100%-7rem)] bg-gradient-to-l from-[#020106] to-[#1a1a1a] pointer-events-none -z-10" />
           <div className="absolute top-28 left-[54rem] right-[50rem] h-[calc(100%-7rem)] bg-[#1a1a1a] pointer-events-none -z-10" />
-        </>
+        </div>
       )}
       {currentStep === 'gender' && (
-        <>
+        <div className="hidden md:block">
           <div className="h-28 w-full bg-gradient-to-b from-[#020106] to-[#1a1a1a]" />
           <div className="absolute top-28 left-0 right-0 h-[calc(100%-7rem)] bg-[#1a1a1a] pointer-events-none -z-10" />
-        </>
+        </div>
       )}
 
-      <div className="flex-1 flex items-center justify-center overflow-hidden mb-50">
+      {(currentStep === 'race' || currentStep === 'subrace' || currentStep === 'class' || currentStep === 'origin' || currentStep === 'stats' || currentStep === 'spells') && (
+        <div className="hidden md:block">
+          <div className="absolute top-16 left-0 right-0 h-32 bg-gradient-to-b from-[#020106] via-[#020106]/40 to-transparent pointer-events-none z-[5]" />
+          <div className="absolute top-32 left-0 w-56 h-[calc(100%-8rem)] bg-gradient-to-r from-[#020106] to-transparent pointer-events-none -z-10" />
+          <div className="absolute top-32 right-0 w-56 h-[calc(100%-8rem)] bg-gradient-to-l from-[#020106] to-transparent pointer-events-none -z-10" />
+        </div>
+      )}
+
+      {/* Mobile rendering for the Name step */}
+      {isNameStep && (
+        <CharacterNameStepMobile
+          selection={selection}
+          onSetName={setName}
+          onNext={handleNext}
+        />
+      )}
+
+      {/* Mobile rendering for the Gender step */}
+      {currentStep === 'gender' && (
+        <CharacterGenderStepMobile
+          selection={selection}
+          onSetGender={setGender}
+          onNext={handleNext}
+          onBack={handlePrev}
+        />
+      )}
+
+      {/* Mobile rendering for the Race step */}
+      {currentStep === 'race' && (
+        <div className="md:hidden flex-1 overflow-y-auto">
+          <CharacterRaceStepMobile
+            onRandomize={randomizeCharacter}
+            onNext={handleNext}
+            onPrev={handlePrev}
+          />
+        </div>
+      )}
+
+      <div className="hidden md:flex flex-1 items-center justify-center overflow-hidden mb-50">
         {currentStep === 'gender' ? (
           <CharacterGenderStep
             data={data}
@@ -271,15 +313,15 @@ return (
         )}
       </div>
 
-      <div className="h-[80px] flex justify-center items-center absolute bottom-10 w-full z-[100] gap-8">
+      <div className="hidden md:flex h-20 justify-center items-center absolute bottom-10 w-full z-100 gap-8">
         {currentStep !== 'name' && (
-          <BackButton 
-            onClick={handlePrev} 
+          <BackButton
+            onClick={handlePrev}
             disabled={currentStepIndex === 0}
           />
         )}
-        <ContinueButton 
-          onClick={handleNext} 
+        <ContinueButton
+          onClick={handleNext}
           disabled={false}
         />
       </div>

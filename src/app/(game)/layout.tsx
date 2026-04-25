@@ -8,7 +8,7 @@ export default function GameLayout({
   return (
     <>
       <CreateCharHeader />
-      <main className="flex-1 pt-16">
+      <main className="flex-1 pt-16 bg-[#181818] md:bg-transparent">
         {children}
       </main>
     </>
