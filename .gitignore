@@ -50,3 +50,9 @@ source/
 USERGUIDE.md
 requests/example.http
 .claude/scheduled_tasks.lock
+public/create_char/race/mobile-race/chars.txt
+.gitignore
+public/create_char/race/Desktop-1200.svg
+.gitignore
+public/create_char/class/mobile-class/Untitled (Copy).zip
+public/create_char/subrace/mobile-subrace/subrace-without-icons.png

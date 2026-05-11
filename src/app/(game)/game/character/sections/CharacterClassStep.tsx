@@ -1,50 +1,292 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
+import ClassIconInline from '@/app/(game)/game/character/sections/ClassIconInline';
+import ClassHalfCircle from '@/components/ui/ClassHalfCircle';
+import HeroBlock from '@/app/(game)/game/character/sections/HeroBlock';
+import CharacterRightPanel from '@/app/(game)/game/character/sections/CharacterRightPanel';
+import { Race, SubRace, CharacterStats, ClassOption } from '@/types/character';
+import { getClassIcon } from '@/services/classes';
 
-const CharacterClassStep: React.FC = () => {
+interface CharacterClassStepProps {
+  onRandomize?: () => void;
+  selectedClass?: string;
+  onSelectClass?: (classId: string) => void;
+  race?: Race | null;
+  subRace?: SubRace | null;
+  gender?: 'male' | 'female' | null;
+  totalStats?: CharacterStats | null;
+  primaryStat?: string;
+  classOptions?: ClassOption[];
+}
+
+const InlineDruidIcon: React.FC<{ selected: boolean; className?: string }> = ({ selected, className }) => {
+  const fill = selected ? '#FCE9CE' : '#ECECEC';
+  return (
+    <svg width="70" height="58" viewBox="0 0 70 58" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+      <g transform="translate(17, 10) scale(0.7)">
+        <path d="M48.3118 0.421547C46.6167 0.744434 44.7197 1.1884 44.074 1.43057C43.4685 1.67273 42.8228 1.83418 42.6613 1.83418C42.4999 1.79381 41.7734 2.07634 41.0469 2.43959C40.3204 2.80283 39.5535 3.08536 39.3114 3.045C38.4234 2.88355 35.9614 4.1751 32.6922 6.6371C29.4634 9.01839 29.3423 9.05875 29.5844 7.96901C29.7055 7.32324 29.9477 6.47566 30.1091 6.03169C30.3513 5.42628 29.9477 5.507 27.8893 6.6371C26.5574 7.3636 25.4273 8.09009 25.4273 8.25154C25.4273 8.41298 24.9833 8.65514 24.4183 8.77623C23.1267 9.09911 19.8171 12.4087 17.678 15.5972L15.9425 18.0996L15.7407 15.7183L15.5389 13.2966L13.8437 15.2339C12.8751 16.3237 12.2293 17.3327 12.3504 17.5345C12.4715 17.7363 12.2697 17.8978 11.9468 17.8978C11.1396 17.8978 9.40406 20.8845 8.27396 24.2344L7.38602 26.8982L6.94205 25.5663C6.65953 24.8398 6.45772 23.7501 6.45772 23.185C6.41736 22.176 6.41736 22.1356 5.81195 22.9429C4.56077 24.5573 2.78489 28.5126 2.74453 29.7638C2.70417 30.45 2.50237 31.1361 2.2602 31.2975C1.53371 31.7819 1.33191 37.5938 1.89696 40.4998C3.1885 46.8364 3.10778 48.0069 1.21082 50.1864C0.52469 50.9936 0 52.043 0 52.6887C0 53.6978 0.0807215 53.7381 1.21082 53.4152C1.89696 53.2134 3.14814 52.4466 4.07644 51.6797C6.13484 49.9038 6.98241 49.7424 10.8167 50.4285C15.4178 51.2357 18.9292 51.155 19.9382 50.2267C20.9876 49.2984 22.8442 48.6527 22.4002 49.3792C22.2388 49.6617 23.4092 49.2177 24.9833 48.3701C27.6471 46.9575 28.414 46.0696 27.0014 45.8678C26.6785 45.8274 25.3466 45.666 24.0147 45.5045L21.593 45.2624L24.2165 44.3744C29.4634 42.5582 32.1675 40.7419 35.9211 36.4233L38.1006 33.921L36.0018 34.2035C34.8313 34.3649 33.5802 34.5668 33.1765 34.6878C32.4501 34.93 34.1452 33.2752 36.365 31.6204C38.5445 30.006 40.7644 27.9072 40.7644 27.544C40.7644 27.3018 41.4101 26.4946 42.177 25.7277C42.9842 24.9205 43.7107 23.7501 43.8722 23.1043C43.9932 22.4585 44.2354 21.9338 44.3565 21.9338C44.639 21.9338 46.0516 19.1086 47.3835 15.8797L47.9486 14.4671L46.2938 14.6285L44.639 14.7496L46.5763 12.6105C47.6257 11.44 48.8365 9.82561 49.2401 9.05875C49.9263 7.60576 51.9039 0.219746 51.6214 0.0179405C51.5407 -0.0627823 50.0473 0.139023 48.3118 0.421547ZM43.5493 8.09009C42.5806 9.34128 36.6476 15.9201 33.4187 19.27C31.7236 21.0459 30.3917 22.5796 30.432 22.6603C30.5127 22.7007 31.4007 22.4585 32.4501 22.1356C34.7103 21.3688 35.8807 21.5302 33.8627 22.3374C29.423 24.073 28.2929 24.7994 25.3869 27.8265C21.4316 31.9029 18.0009 35.6565 16.9515 36.9884C16.0232 38.1185 15.7811 38.1185 19.9786 37.0691C21.2701 36.7462 22.6424 36.4637 23.0056 36.4637C23.7321 36.5041 18.2027 38.7239 15.9425 39.3293C14.6913 39.6522 13.4805 40.6209 10.5342 43.6479C7.26494 47.0382 6.94205 47.2804 8.2336 45.4238C9.08117 44.213 9.68658 43.1636 9.60586 43.0829C9.52514 43.0022 8.6372 43.6479 7.66855 44.5359C5.0451 46.8364 4.72221 46.5135 7.18422 44.0112C9.04081 42.1142 9.28298 41.7106 9.32334 40.0962C9.32334 39.0872 9.48478 37.3516 9.68658 36.2619C9.96911 34.3649 9.96911 34.486 10.0498 37.6745L10.0902 41.1052L13.8841 37.0691C17.4359 33.2752 17.7184 32.8716 18.1623 30.6114C19.2117 25.2838 19.2924 25.1223 19.3328 28.3916L19.4135 31.4186L24.7815 25.9699C29.988 20.6423 30.1899 20.4001 31.0778 17.5345C31.5621 15.9201 32.0464 14.6689 32.1272 14.7496C32.2079 14.8303 32.1272 15.8394 31.9254 16.9695L31.6025 19.0682L37.697 13.2159C43.5896 7.60576 44.7197 6.6371 43.5493 8.09009Z" fill={fill} />
+      </g>
+    </svg>
+  );
+};
+
+const InlineClericIcon: React.FC<{ selected: boolean; className?: string }> = ({ selected, className }) => {
+  const fill = selected ? '#FCE9CE' : '#ECECEC';
+  return (
+    <svg width="70" height="58" viewBox="0 0 70 58" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+      <g transform="translate(17, 10) scale(0.65)">
+        <path d="M26.8496 0.0507317C26.8031 0.143799 25.8724 0.236866 24.8952 0.283398C18.939 0.562595 13.5877 3.12192 8.32943 8.28709C2.93159 13.4988 0 19.5016 0 25.3182C0 34.6248 2.41972 41.5583 7.35223 46.4442C8.79476 47.9333 10.7491 49.562 11.6333 50.0738C12.5174 50.6322 13.355 51.2372 13.4946 51.3768C13.8669 51.9352 17.8687 53.7034 20.335 54.4479C24.9883 55.8439 32.4801 55.2855 38.1106 53.145C39.4601 52.6332 41.7867 51.3302 43.2293 50.26C53.1408 42.8612 56.91 32.5774 53.9319 20.7114C52.6289 15.3601 51.0468 12.6612 46.7658 8.38016C41.6471 3.21498 36.2028 0.609131 29.4555 0.0972672C28.106 0.00419998 26.9427 -0.0423355 26.8496 0.0507317ZM32.2009 3.72685C37.0869 4.70404 41.0887 6.8911 44.6718 10.4742C48.4875 14.3364 50.4419 18.059 51.5122 23.5034C52.2567 27.4587 52.2567 27.9241 51.5122 31.8794C50.4419 37.3238 48.4875 41.0464 44.6718 44.9087C40.9957 48.6313 36.9473 50.7253 31.4099 51.7956C27.7337 52.4936 27.1753 52.4936 23.4992 51.7956C17.9618 50.7253 13.9134 48.6313 10.2373 44.9087C6.42157 41.0464 4.46718 37.3238 3.39692 31.8794C2.65239 27.9241 2.65239 27.4587 3.39692 23.5034C4.46718 18.059 6.42157 14.3364 10.2373 10.4742C13.7273 6.98417 17.8222 4.75058 22.3359 3.77338C26.3843 2.88925 28.1525 2.88925 32.2009 3.72685Z" fill={fill} />
+        <path d="M19.6375 8.70588C13.1228 11.5909 9.58633 15.4532 8.423 20.9906C7.91114 23.5965 8.51607 26.9934 10.0051 29.227C11.7734 31.9724 16.3802 33.4615 19.7305 32.3447C22.1503 31.5536 23.7789 30.0181 26.757 25.8301C30.154 20.9906 32.8064 19.3154 37.227 19.3154C39.3675 19.3154 40.8566 19.5946 42.113 20.2461L43.9743 21.1302L42.5783 20.0134C37.7854 16.0581 31.4569 16.8957 25.7799 22.154C22.476 25.2251 20.7543 25.6905 19.0791 23.8757C17.1712 21.8282 18.4742 17.6402 22.0107 14.3829C24.3373 12.1959 26.2917 11.2187 29.8748 10.4741C34.7607 9.49695 40.3912 11.6375 44.2535 15.9185C46.4406 18.4313 46.301 17.8729 43.7882 14.5225C41.7872 11.8701 37.0874 8.61282 33.5509 7.54256C32.1549 7.07723 29.549 6.7515 27.5016 6.7515C24.3839 6.7515 23.4532 6.98416 19.6375 8.70588Z" fill={fill} />
+        <path d="M34.2495 23.0381C31.7367 24.2945 30.9922 25.039 28.4794 28.8082C25.7805 32.9031 24.1053 34.4387 21.2202 35.4159C18.4748 36.3466 15.264 36.1139 12.5185 34.7644L10.4711 33.7872L12.0532 35.1367C13.7284 36.5792 17.3114 37.9287 19.4054 37.9287C22.7093 37.9287 27.3626 35.6486 30.015 32.81C34.8544 27.5983 40.4849 31.1348 37.2741 37.3703C36.3435 39.1851 33.1792 42.3493 31.1783 43.4661C29.5962 44.3503 25.6874 45.374 23.7795 45.374C19.452 45.374 12.472 42.0236 10.0523 38.7663C9.4008 37.8356 9.4008 37.9287 10.0988 39.2316C10.9829 40.8603 14.3333 44.2107 16.2877 45.4205C19.545 47.468 22.9885 48.3986 26.9903 48.3521C29.1774 48.3056 31.2714 48.166 31.6436 48.0729C32.0159 47.9333 33.0396 47.6541 33.8307 47.468C34.6683 47.2818 35.5989 46.8165 35.8781 46.4908C36.1573 46.1185 36.6227 45.8393 36.8553 45.8393C37.8791 45.8393 42.2997 42.2563 43.8353 40.2088C44.766 38.9059 45.8362 36.6723 46.3016 34.9971C47.0461 32.2051 47.0461 31.8328 46.3481 29.4131C45.4174 26.2023 43.6957 24.1084 41.0433 22.9916C38.484 21.8748 36.5761 21.9213 34.2495 23.0381Z" fill={fill} />
+      </g>
+    </svg>
+  );
+};
+
+const InlineMonkIcon: React.FC<{ selected: boolean; className?: string }> = ({ selected, className }) => {
+  const fill = selected ? '#FCE9CE' : '#ECECEC';
+  return (
+    <svg width="70" height="58" viewBox="0 0 70 58" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+      <g transform="translate(17, 10) scale(0.065)">
+        <path d="M296.654 23.8057C271.475 50.8158 271.475 50.358 311.761 72.7902L337.398 86.9819L354.794 66.381C367.612 50.358 371.275 43.0333 368.986 34.3351C366.239 22.8901 336.94 0.000205994 325.495 0.000205994C321.833 0.000205994 309.014 10.5296 296.654 23.8057Z" fill={fill} />
+        <path d="M374.479 67.7545L348.843 94.3068L364.408 103.005C377.226 109.872 379.973 113.992 379.973 125.437C379.515 153.363 352.963 173.964 317.255 173.964C303.978 173.964 292.991 175.795 292.991 177.626C292.991 184.951 314.05 201.432 323.206 201.432C334.651 200.974 448.643 91.56 448.643 80.5728C448.643 69.5856 419.801 41.2021 408.814 41.2021C403.778 41.2021 388.213 53.1049 374.479 67.7545Z" fill={fill} />
+        <path d="M215.166 62.7186C208.757 66.8387 202.805 71.4167 201.432 72.7901C200.058 74.6213 184.493 87.4397 166.181 102.089C148.327 116.739 132.304 131.388 131.389 135.051C130.015 138.255 127.268 170.759 125.437 206.925L122.69 272.39L146.954 292.991C160.23 304.436 195.938 334.651 225.695 360.288C260.946 390.502 284.751 407.441 291.16 407.441C303.979 407.441 348.843 395.996 360.288 390.045C364.866 387.298 381.804 370.817 397.827 352.963L426.669 320.459H404.237C382.262 320.459 381.804 320.001 368.986 298.485C356.626 277.426 355.252 276.511 326.869 271.017C310.846 267.812 296.196 265.523 293.907 265.523C291.618 265.523 285.209 275.595 279.258 288.413C271.933 303.521 265.524 311.303 260.03 311.303C249.043 311.303 249.501 308.556 263.692 279.257C275.137 254.994 275.595 254.078 268.27 232.104C264.15 219.743 260.946 206.925 260.946 203.721C260.946 200.058 250.416 190.902 238.056 182.662L214.708 167.554L230.731 151.531L246.754 135.509L270.559 146.954C286.582 154.278 302.147 157.941 317.255 157.483C336.94 157.483 341.976 155.194 353.421 142.376C363.95 130.473 365.781 126.353 361.204 120.859C358.457 117.197 354.337 114.45 352.963 114.45C351.132 114.45 325.953 101.174 297.112 84.6929C268.27 68.2122 240.802 54.936 235.767 54.936C230.731 54.936 221.117 58.5984 215.166 62.7186Z" fill={fill} />
+        <path d="M388.671 168.012C361.203 194.564 338.771 220.201 338.771 224.321C338.771 233.019 361.66 256.367 370.816 256.367C382.261 256.367 480.688 178.541 483.435 167.096C486.639 154.736 471.532 126.352 459.629 121.774C444.522 115.823 437.197 120.401 388.671 168.012Z" fill={fill} />
+        <path d="M460.545 210.13C458.714 212.419 442.233 226.153 423.463 240.344C385.008 269.186 380.43 281.088 401.031 297.111C412.018 305.809 413.849 305.809 426.21 299.858C448.642 287.955 499.458 250.874 502.205 244.464C508.156 228.442 468.785 196.396 460.545 210.13Z" fill={fill} />
+        <path d="M87.4392 303.521C76.4521 312.219 67.7539 320.917 67.7539 322.748C67.7539 324.579 74.6209 335.109 82.8613 346.554C95.2218 363.035 106.209 371.275 137.339 385.924C158.856 395.538 178.541 405.152 180.83 406.525C183.577 408.357 181.288 403.321 176.71 395.996C171.674 388.213 155.651 362.577 140.544 338.771C125.437 314.966 111.703 293.907 109.871 291.618C108.498 289.787 97.9686 295.28 87.4392 303.521Z" fill={fill} />
+        <path d="M159.314 334.193C164.807 342.891 178.999 365.781 190.902 385.009C208.298 413.392 216.081 422.091 232.562 429.873C252.705 439.945 253.62 439.945 261.861 431.247C270.101 423.006 269.643 422.091 225.695 384.093C200.973 363.035 173.506 339.229 164.807 331.904L149.242 318.17L159.314 334.193Z" fill={fill} />
+        <path d="M40.7441 340.145C7.32478 365.781 0 373.564 0 382.262C0 389.129 14.6496 406.068 47.1533 435.367C72.79 458.714 101.173 485.267 110.329 494.423C141.002 524.18 155.652 535.625 161.603 535.625C164.807 535.625 173.506 529.673 180.373 522.348L193.191 508.614L148.327 454.594C123.148 424.379 95.6799 390.96 86.9817 379.973C54.0202 338.313 48.5267 333.735 40.7441 340.145Z" fill={fill} />
+        <path d="M132.762 405.152C132.762 406.983 141.46 418.428 152.447 431.247C162.976 444.065 179.457 463.293 188.613 474.28L205.552 494.423L221.575 477.027C230.731 467.871 238.055 458.257 238.055 456.426C238.055 454.594 217.912 443.607 193.649 432.162C168.928 420.717 145.122 409.272 141.002 406.983C136.424 404.694 132.762 403.779 132.762 405.152Z" fill={fill} />
+      </g>
+      <path d="M8.41625 0.500568C8.41625 0.834286 7.80444 1.72419 7.02577 2.55847C4.96786 4.78324 2.90995 8.67658 1.40824 13.293C-1.20586 21.3577 -0.0934783 32.6484 4.02234 39.8233C5.69091 42.6599 9.19491 47.3319 10.4742 48.3886C19.262 55.6747 25.7694 58.0664 35.7809 57.677C42.3995 57.4545 45.1805 56.7871 49.8525 54.3955C58.6403 49.946 64.5916 42.938 67.7062 33.4827C68.8186 30.0899 69.0411 28.1989 69.0411 23.0263C69.0411 19.5779 68.8186 16.6301 68.5405 16.4633C68.2624 16.2964 68.0956 19.0774 68.0956 22.6926C68.0956 28.1989 67.8731 29.8675 66.7051 33.4271C65.5371 36.9867 62.0331 43.4942 60.7538 44.4953C60.587 44.6622 59.2521 45.997 57.8616 47.5543C56.4712 49.0561 55.1363 50.3909 54.9138 50.3909C54.6914 50.4465 53.1896 51.3921 51.5211 52.4488C49.9081 53.5056 46.9047 54.7848 44.9024 55.341C42.8445 55.8972 41.1203 56.509 41.0091 56.6759C40.8978 56.8427 38.1169 56.954 34.8909 56.954C30.1077 56.8427 28.1054 56.5646 24.3789 55.341C13.7001 51.7814 6.13586 44.2172 2.52062 33.3715C1.18576 29.3669 0.963285 27.8096 1.0189 23.0819C1.07452 16.9638 2.68748 10.957 5.3572 6.67429C6.13586 5.45067 6.74767 4.33828 6.74767 4.17143C6.74767 4.00457 7.35948 3.17028 8.13815 2.336C9.63987 0.77866 9.86234 -3.8147e-06 8.97244 -3.8147e-06C8.69434 -3.8147e-06 8.41625 0.222473 8.41625 0.500568Z" fill={fill} fillOpacity="0.7" />
+    </svg>
+  );
+};
+
+const SCROLL_AREA_HEIGHT = 432;
+const THUMB_HEIGHT = 71;
+
+const CharacterClassStep: React.FC<CharacterClassStepProps> = ({
+  onRandomize,
+  selectedClass: controlledSelectedClass,
+  onSelectClass,
+  race,
+  subRace,
+  gender,
+  totalStats,
+  primaryStat,
+  classOptions = [],
+}) => {
+  const [internalSelected, setInternalSelected] = useState<string>('');
+  const selected = controlledSelectedClass ?? internalSelected;
+
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const [thumbTop, setThumbTop] = useState(0);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const update = () => {
+      const max = el.scrollHeight - el.clientHeight;
+      const ratio = max > 0 ? el.scrollTop / max : 0;
+      const trackSpace = el.clientHeight - THUMB_HEIGHT;
+      setThumbTop(ratio * trackSpace);
+    };
+    update();
+    el.addEventListener('scroll', update);
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    if (el.firstElementChild) ro.observe(el.firstElementChild);
+    return () => {
+      el.removeEventListener('scroll', update);
+      ro.disconnect();
+    };
+  }, []);
+
+  const handleSelect = (id: string) => {
+    if (onSelectClass) {
+      onSelectClass(id);
+    } else {
+      setInternalSelected(id);
+    }
+  };
+
+  const selectedOption = classOptions.find((c) => c.id === selected) ?? null;
+  const classLabel = selectedOption?.name ?? 'Выберите класс';
+  const classSummary = selectedOption?.summary ?? '';
+  const classHitDie = selectedOption?.hitPoints?.hitDie;
+
   return (
     <>
-      <Image 
-        src="/create_char/race/image 8.png" 
-        alt="" 
+      <Image
+        src="/create_char/race/image 8.png"
+        alt=""
         fill
         className="object-cover pointer-events-none -z-10"
         unoptimized
       />
-      
       <div className="absolute inset-0 pointer-events-none -z-10">
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/30 to-black" />
       </div>
-      
-      <Image 
-        src="/create_char/class/full_class.svg" 
-        alt="" 
-        width={0}
-        height={0}
-        className="absolute left-55 top-130 -translate-y-1/2 pointer-events-none w-auto h-auto"
-        unoptimized
-      />
 
-      <Image 
-        src="/create_char/race/characteristics.svg" 
-        alt="" 
-        width={0}
-        height={0}
-        className="absolute right-50 top-130 -translate-y-1/2 pointer-events-none w-auto h-auto"
-        unoptimized
-      />
-
-      <div className="absolute bottom-0 left-0 right-0 flex justify-center pointer-events-none -z-10 px-4">
-        <Image 
-          src="/create_char/race/теникмкыс 1.svg" 
-          alt="" 
-          width={1200} 
-          height={275} 
-          className="h-[75dvh] w-auto max-w-full object-contain"
-          unoptimized
+      <div
+        className="absolute left-[100px] top-128 -translate-y-1/2"
+        style={{ width: '421px', height: '722px' }}
+      >
+        <div
+          className="absolute inset-0 rounded-[20px] pointer-events-none"
+          style={{ background: 'linear-gradient(131.16deg, #121212 20.42%, #272727 47.31%, #121212 71.29%)' }}
         />
+        <div className="absolute inset-0 opacity-30 pointer-events-none">
+          <svg
+            viewBox="0 0 421 722"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="absolute inset-0 w-full h-full"
+          >
+            <g transform="translate(2.5, 6.5)">
+              <path
+                d="M413.721 692.073C413.113 692.237 412.1 692.549 410.884 692.97V668.226C412.708 675.693 414.622 685.649 413.721 692.018M408.07 699.339C405.593 700.089 399.289 702.358 398.208 706.165H394.403C395.844 701.663 402.644 698.112 408.07 695.934V699.339ZM8.42122 699.339V696.062C13.8024 698.24 20.3769 701.736 21.7954 706.165H18.283C17.2022 702.358 10.8979 700.089 8.42122 699.339ZM2.47714 692.018C1.5315 685.246 3.69298 674.558 5.60679 666.981V693.006C4.25586 692.549 3.15261 692.201 2.47714 692.018ZM18.2379 2.23279H23.8893C16.5718 5.49046 11.2582 11.713 8.42122 15.7942V9.15077C10.8979 8.40041 17.2022 6.13102 18.283 2.30599M408.07 9.15077V15.7942C405.278 11.713 399.919 5.49046 392.579 2.28769H398.208C399.289 6.11271 405.593 8.38211 408.07 9.13247M406.179 16.8374C407.079 18.1002 407.71 19.1251 408.07 19.7657V682.281C406.88 675.325 406.248 668.313 406.179 661.29V16.8374ZM8.42122 688.65C10.3024 679.577 11.3186 670.399 11.4608 661.198V15.2818C15.1758 10.3953 21.8179 3.66031 30.5539 2.28769H385.937C394.673 3.6054 401.315 10.4136 405.053 15.3001V661.344C405.186 670.545 406.195 679.723 408.07 688.797V694.123C401.991 696.465 393.548 700.675 392.084 706.403H24.1145C22.6735 700.766 14.4779 696.593 8.35367 694.232L8.42122 688.65ZM8.42122 19.7474C8.80398 19.1251 9.43441 18.1002 10.335 16.8191V661.253C10.2569 668.277 9.61762 675.289 8.42122 682.245V19.7474ZM410.884 659.679V7.46703L409.894 7.32062C407.395 6.68006 400.888 4.33747 400.888 1.2445V0H15.6262V1.153C15.6262 4.24596 9.11919 6.64346 6.61998 7.22911L5.6293 7.46703V658.709C4.1658 663.376 -1.41802 682.648 0.338179 692.878V693.445L1.01364 693.61C1.01364 693.61 2.94997 694.141 5.51673 695.074V701.077L6.50741 701.333C9.02913 701.956 15.5136 704.28 15.5136 707.409V708.544H400.775V707.409C400.775 704.298 407.304 701.919 409.781 701.333L410.772 701.077V694.964C413.203 694.104 414.937 693.628 414.982 693.61L415.658 693.445V692.878C417.324 683.215 412.46 665.627 410.682 659.679"
+                fill="white"
+              />
+            </g>
+          </svg>
+        </div>
+        <div className="absolute left-13.25 top-6 text-center text-[#FFEED5] text-3xl font-normal font-firenight leading-10 pointer-events-none">
+          КЛАСС
+        </div>
+        <div
+          className="absolute left-10 top-18 h-px pointer-events-none"
+          style={{
+            width: 'calc(100% - 80px)',
+            background: 'linear-gradient(90deg, rgba(116, 116, 116, 0.00) 0%, #A7A7A7 50.02%, rgba(218, 218, 218, 0.00) 100%)',
+          }}
+        />
+        <div
+          className="absolute left-10 top-128 h-px pointer-events-none"
+          style={{
+            width: 'calc(100% - 80px)',
+            background: 'linear-gradient(90deg, rgba(116, 116, 116, 0.00) 0%, #A7A7A7 50.02%, rgba(218, 218, 218, 0.00) 100%)',
+          }}
+        />
+
+        {onRandomize && (
+          <button
+            onClick={onRandomize}
+            className="absolute right-12 top-6 z-30 w-8.75 h-8.75 transition-all hover:opacity-80 cursor-pointer border-0 bg-transparent p-0"
+          >
+            <Image
+              src="/create_char/random_background.svg"
+              alt=""
+              fill
+              className="object-contain pointer-events-none"
+              unoptimized
+            />
+            <Image
+              src="/create_char/random.svg"
+              alt="Случайный класс"
+              width={32}
+              height={29}
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+              unoptimized
+            />
+          </button>
+        )}
+
+        <div
+          ref={scrollRef}
+          className="no-scrollbar absolute left-10 top-19 overflow-y-auto pt-3"
+          style={{ height: `${SCROLL_AREA_HEIGHT}px`, right: '28px' }}
+        >
+          <div className="grid grid-cols-3 gap-x-2 gap-y-6 pr-2 pt-5">
+            {classOptions.length === 0 ? (
+              <div className="flex items-center justify-center h-full text-[#ECECEC] font-jost text-[15px] col-span-3">Загрузка классов...</div>
+            ) : (
+              classOptions.map((option) => {
+                const isSelected = selected === option.id;
+                const icon = getClassIcon(option);
+                const needsHalfCircle = option.index === 'druid' || option.index === 'cleric' || option.index === 'bard' || option.index === 'barbarian';
+                return (
+                  <button
+                    key={option.id}
+                    onClick={() => handleSelect(option.id)}
+                    className="cursor-pointer border-0 bg-transparent p-0 transition-all hover:scale-105 flex flex-col items-center"
+                    aria-label={`Выбрать класс: ${option.name}`}
+                  >
+                    <span className="w-23 h-19 relative flex items-center justify-center">
+                      {needsHalfCircle && (
+                        <ClassHalfCircle
+                          selected={isSelected}
+                          className="absolute inset-0 w-full h-full"
+                        />
+                      )}
+                      {option.index === 'monk' ? (
+                        <InlineMonkIcon selected={isSelected} className="relative w-full h-full" />
+                      ) : option.index === 'druid' ? (
+                        <InlineDruidIcon selected={isSelected} className="relative w-full h-full" />
+                      ) : option.index === 'cleric' ? (
+                        <InlineClericIcon selected={isSelected} className="relative w-full h-full" />
+                      ) : (
+                        <ClassIconInline
+                          src={icon}
+                          selected={isSelected}
+                          className="relative w-full h-full"
+                        />
+                      )}
+                    </span>
+                    <span
+                      className={`font-jost text-[15px] leading-none mt-3 ${
+                        isSelected ? 'text-[#FFEED5]' : 'text-[#ECECEC]'
+                      }`}
+                    >
+                      {option.name}
+                    </span>
+                  </button>
+                );
+              })
+            )}
+          </div>
+        </div>
+
+        <div
+          className="absolute pointer-events-none z-30"
+          style={{
+            right: '14px',
+            top: '76px',
+            width: '6px',
+            height: `${SCROLL_AREA_HEIGHT}px`,
+          }}
+        >
+          <div
+            className="absolute left-0 right-0 rounded-full bg-white"
+            style={{ top: `${thumbTop}px`, height: `${THUMB_HEIGHT}px` }}
+          />
+        </div>
+
+        <span className="absolute left-1/2 -translate-x-1/2 top-131 text-center font-firenight text-[25px] leading-[130%] text-[#FFEED5]">
+        {classLabel}
+      </span>
+      <div className="absolute left-1/2 -translate-x-1/2 top-140 text-center font-jost font-normal text-[15px] leading-none text-white">
+        {classSummary && <p className="mb-2">{classSummary}</p>}
+        {classHitDie && <p className="text-[#DDA852]">Кость хитов: d{classHitDie}</p>}
+      </div>
+      </div>
+      
+      <CharacterRightPanel totalStats={totalStats} primaryStat={primaryStat} traits={[...(race?.traits ?? []), ...(subRace?.traits ?? [])]} />
+
+      <Image
+        src="/create_char/race/bottom_wtf.svg"
+        alt=""
+        width={0}
+        height={0}
+        className="absolute left-[240px] top-198 w-auto h-auto pointer-events-none"
+        unoptimized
+      />
+
+      <div className="absolute bottom-0 left-0 right-0 flex justify-center pointer-events-none -z-10">
+      <HeroBlock race={race ?? null} subRace={subRace ?? null} gender={gender ?? null} />
       </div>
     </>
   );

@@ -1,17 +1,35 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import Button from '@/components/ui/Button';
+import { startGame, saveCurrentGame } from '@/services/game';
+import { useToast } from '@/context/ToastContext';
 
 const CreateGamePage: React.FC = () => {
   const router = useRouter();
+  const { showToast } = useToast();
+  const [creating, setCreating] = useState(false);
+
+  const handleCreate = async () => {
+    if (creating) return;
+    setCreating(true);
+    try {
+      const data = await startGame();
+      saveCurrentGame(data);
+      router.push('/game/character');
+    } catch (e) {
+      const message = e instanceof Error ? e.message : 'Не удалось создать игру';
+      showToast(message, 'error');
+      setCreating(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#0F172A] pt-20 pb-12">
-      <div className="max-w-4xl mx-auto px-4">
+      <div className="px-[100px]">
         <div className="bg-[#1E293B] rounded-2xl p-6 mb-6 relative overflow-hidden border border-[#66AAA5]/30 shadow-[0_0_40px_rgba(102,170,165,0.15)]">
           <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#66AAA5] to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#66AAA5]/30 to-transparent" />
@@ -40,7 +58,9 @@ const CreateGamePage: React.FC = () => {
             <span className="text-[#64748B]">Заглушка: форма создания игры</span>
           </div>
           <div className="flex justify-end">
-            <Button onClick={() => router.push('/game/character')}>Создать</Button>
+            <Button onClick={handleCreate} disabled={creating}>
+              {creating ? 'Создание…' : 'Создать'}
+            </Button>
           </div>
         </div>
 

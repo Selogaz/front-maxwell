@@ -4,20 +4,20 @@ import React from 'react';
 import Button from '@/components/ui/Button';
 
 interface ProfileTabProps {
-  name: string;
+  nickname: string;
   email: string;
   password: string;
-  onNameChange: (value: string) => void;
+  onNicknameChange: (value: string) => void;
   onEmailChange: (value: string) => void;
   onPasswordChange: (value: string) => void;
   onSave: () => void;
 }
 
 const ProfileTab: React.FC<ProfileTabProps> = ({
-  name,
+  nickname,
   email,
   password,
-  onNameChange,
+  onNicknameChange,
   onEmailChange,
   onPasswordChange,
   onSave,
@@ -25,13 +25,13 @@ const ProfileTab: React.FC<ProfileTabProps> = ({
   return (
     <div className="space-y-6">
       <div>
-        <label className="block text-[#94A3B8] text-sm mb-2">Имя пользователя</label>
+        <label className="block text-[#94A3B8] text-sm mb-2">Никнейм</label>
         <input
           type="text"
-          value={name}
-          onChange={(e) => onNameChange(e.target.value)}
+          value={nickname}
+          onChange={(e) => onNicknameChange(e.target.value)}
           className="w-full px-4 py-3 rounded-lg bg-[#0F172A] text-white border border-[#475569] focus:border-[#66AAA5] focus:outline-none transition-colors"
-          placeholder="Введите имя"
+          placeholder="Введите никнейм"
         />
       </div>
 

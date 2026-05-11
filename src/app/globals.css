@@ -34,3 +34,13 @@ body {
 .font-firenight {
   font-family: var(--font-firenight, 'Firenight'), sans-serif !important;
 }
+
+/* Скрытие нативного скроллбара в кастомных скрол-контейнерах
+   (используется в визарде создания персонажа со своим бирюзовым/белым ползунком). */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}

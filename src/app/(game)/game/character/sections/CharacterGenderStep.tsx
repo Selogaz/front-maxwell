@@ -46,8 +46,8 @@ const CharacterGenderStep: React.FC<CharacterGenderStepProps> = ({
             <Image 
               src="/create_char/gender/m_gender_small.svg" 
               alt="Мужской" 
-              width={25}
-              height={40}
+              width={36}
+              height={37}
               className="absolute"
               style={{ 
                 left: '50%', 

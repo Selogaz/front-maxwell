@@ -24,8 +24,12 @@ const CharacterStepsMenu: React.FC<CharacterStepsMenuProps> = ({
         return selection.subRace !== null;
       case 'class':
         return selection.characterClass !== null;
+      case 'subclass':
+        return selection.subClass !== null;
       case 'origin':
         return selection.origin !== null;
+      case 'alignment':
+        return selection.alignment !== null;
       case 'spells':
         return true;
       case 'stats':
@@ -82,6 +86,18 @@ const CharacterStepsMenu: React.FC<CharacterStepsMenuProps> = ({
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className={colorClass}>
               <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" />
               <path d="M12 3V12L16 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
+        );
+      case 'balance':
+        return (
+          <div className={`w-8 h-8 rounded-full flex items-center justify-center ${bgClass} ${isActive ? '' : 'border border-[rgba(255,255,255,0.1)]'}`}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className={colorClass}>
+              <path d="M12 3V21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              <path d="M5 8L12 3L19 8" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+              <path d="M5 16L12 21L19 16" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+              <circle cx="5" cy="12" r="2" stroke="currentColor" strokeWidth="2" />
+              <circle cx="19" cy="12" r="2" stroke="currentColor" strokeWidth="2" />
             </svg>
           </div>
         );

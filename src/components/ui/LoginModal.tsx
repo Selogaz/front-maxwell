@@ -102,10 +102,6 @@ const LoginModal: React.FC<LoginModalProps> = ({
   };
 
   const validatePassword = (value: string): string | undefined => {
-    const invalidChars = /[<>()[\]\\:;]/;
-    if (invalidChars.test(value)) {
-      return 'Используются недопустимые символы';
-    }
     if (value.length > MAX_PASSWORD_LENGTH) {
       return 'Превышено максимальное количество символов';
     }

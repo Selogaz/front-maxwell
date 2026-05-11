@@ -30,17 +30,17 @@ const LKPage: React.FC = () => {
   const { user, logout } = useAuth();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('play');
-  const [name, setName] = useState(user?.name || '');
+  const [nickname, setNickname] = useState(user?.nickname || '');
   const [email, setEmail] = useState(user?.email || '');
   const [password, setPassword] = useState('');
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showPlayGameModal, setShowPlayGameModal] = useState(false);
   const [balance] = useState(1000);
 
-  const userName = user?.name || user?.email.split('@')[0] || 'Пользователь';
+  const userName = user?.nickname || user?.email?.split('@')[0] || 'Пользователь';
 
   const handleSave = () => {
-    console.log('Save changes:', { name, email, password });
+    console.log('Save changes:', { nickname, email, password });
   };
 
   const handleLogout = () => {
@@ -72,10 +72,10 @@ const LKPage: React.FC = () => {
       case 'profile':
         return (
           <ProfileTab
-            name={name}
+            nickname={nickname}
             email={email}
             password={password}
-            onNameChange={setName}
+            onNicknameChange={setNickname}
             onEmailChange={setEmail}
             onPasswordChange={setPassword}
             onSave={handleSave}

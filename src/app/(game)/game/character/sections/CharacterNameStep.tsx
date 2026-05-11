@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { CharacterData, CharacterSelection, StepId, CharacterStats } from '@/types/character';
+import { CharacterData, CharacterSelection, StepId, CharacterStats, AlignmentOption } from '@/types/character';
 import CharacterStepContent from './CharacterStepContent';
 
 interface CharacterNameStepProps {
@@ -13,6 +13,7 @@ interface CharacterNameStepProps {
   onSelectSubRace: (subrace: string) => void;
   onSelectClass: (charClass: string) => void;
   onSelectOrigin: (origin: string) => void;
+  onSelectAlignment: (alignment: string) => void;
   onUpdateStats: (stat: keyof CharacterStats, value: number) => void;
   onApplyRecommended: () => void;
   onResetStats: () => void;
@@ -23,6 +24,7 @@ interface CharacterNameStepProps {
   isFirstStep: boolean;
   isLastStep: boolean;
   currentStepIndex: number;
+  alignmentOptions?: AlignmentOption[];
 }
 
 const CharacterNameStep: React.FC<CharacterNameStepProps> = ({
@@ -34,6 +36,7 @@ const CharacterNameStep: React.FC<CharacterNameStepProps> = ({
   onSelectSubRace,
   onSelectClass,
   onSelectOrigin,
+  onSelectAlignment,
   onUpdateStats,
   onApplyRecommended,
   onResetStats,
@@ -43,6 +46,7 @@ const CharacterNameStep: React.FC<CharacterNameStepProps> = ({
   onSetGender,
   isFirstStep,
   isLastStep,
+  alignmentOptions,
 }) => {
   return (
     <div className="flex-1 flex items-center justify-center overflow-hidden">
@@ -55,6 +59,7 @@ const CharacterNameStep: React.FC<CharacterNameStepProps> = ({
         onSelectSubRace={onSelectSubRace}
         onSelectClass={onSelectClass}
         onSelectOrigin={onSelectOrigin}
+        onSelectAlignment={onSelectAlignment}
         onUpdateStats={onUpdateStats}
         onApplyRecommended={onApplyRecommended}
         onResetStats={onResetStats}
@@ -64,6 +69,7 @@ const CharacterNameStep: React.FC<CharacterNameStepProps> = ({
         onSetGender={onSetGender}
         isFirstStep={isFirstStep}
         isLastStep={isLastStep}
+        alignmentOptions={alignmentOptions}
       />
     </div>
   );

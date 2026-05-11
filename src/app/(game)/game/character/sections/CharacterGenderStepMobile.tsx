@@ -1,36 +1,88 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
-import { CharacterSelection } from '@/types/character';
+import { CharacterSelection, StepId } from '@/types/character';
 
 interface CharacterGenderStepMobileProps {
   selection: CharacterSelection;
   onSetGender: (gender: 'male' | 'female') => void;
   onNext: () => void;
   onBack: () => void;
+  currentStep: StepId;
+  onStepChange: (step: StepId) => void;
 }
+
+const stepLabels: Record<string, string> = {
+  name: 'Имя',
+  gender: 'Пол',
+  race: 'Раса',
+  subrace: 'Подраса',
+  class: 'Класс',
+  origin: 'Происхождение',
+  stats: 'Характеристики',
+  spells: 'Заклинания',
+};
 
 const CharacterGenderStepMobile: React.FC<CharacterGenderStepMobileProps> = ({
   selection,
   onSetGender,
   onNext,
   onBack,
+  currentStep,
+  onStepChange,
 }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const currentLabel = stepLabels[currentStep] || 'Этап';
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleSelectStep = (step: StepId) => {
+    onStepChange(step);
+    setIsOpen(false);
+  };
+
   return (
-    <div className="md:hidden flex flex-col items-center w-full">
+    <div className="md:hidden flex flex-col items-center w-full overflow-visible">
 
       {/* 2. Выпадающий список этапа */}
-      <div className="w-[300px] ">
+      <div className="w-[300px] relative z-[100]" ref={dropdownRef}>
         <button
           type="button"
           className="relative w-full h-9.25 flex items-center justify-between px-3 bg-white/5 border border-white/10 rounded-md cursor-pointer transition-colors hover:bg-white/10"
+          onClick={() => setIsOpen(!isOpen)}
         >
-          <span className="font-jost text-[15px] leading-none text-[#FCE9CE]">Пол</span>
+          <span className="font-jost text-[15px] leading-none text-[#FCE9CE]">{currentLabel}</span>
           <svg width="9" height="6" viewBox="0 0 9 6" fill="none" aria-hidden="true">
             <path d="M0.5 0.5L4.5 5L8.5 0.5L0.5 0.5Z" fill="#FFEED5" />
           </svg>
         </button>
+
+        {/* Dropdown menu */}
+        {isOpen && (
+          <div className="absolute top-full left-0 w-full mt-1 bg-[#1a1a1a] border border-white/10 rounded-md overflow-hidden z-[100]">
+            {Object.entries(stepLabels).map(([key, label]) => (
+              <button
+                key={key}
+                type="button"
+                className="w-full px-3 py-2 text-left font-jost text-[15px] text-[#FCE9CE] hover:bg-white/10 transition-colors"
+                onClick={() => handleSelectStep(key as StepId)}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* 3. Основная карточка выбора */}

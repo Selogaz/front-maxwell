@@ -17,7 +17,9 @@ const stepLabels: Record<string, string> = {
   race: 'Раса',
   subrace: 'Подраса',
   class: 'Класс',
+  subclass: 'Подкласс',
   origin: 'Происхождение',
+  alignment: 'Мировоззрение',
   spells: 'Заклинания',
   stats: 'Характеристики',
 };
@@ -36,7 +38,7 @@ const CharacterStepsNav: React.FC<CharacterStepsNavProps> = ({
   };
 
   return (
-    <div className={`flex items-center justify-start gap-1 bg-[#020106] pl-55 pr-4 py-2 ${className}`}>
+    <div className={`flex items-center justify-start gap-1 bg-[#020106] pl-23 pr-4 py-2 ${className}`}>
       {steps.map((step, index) => (
         <React.Fragment key={step.id}>
           <button
@@ -51,13 +53,13 @@ const CharacterStepsNav: React.FC<CharacterStepsNavProps> = ({
             <div
               className={`
                 w-9 h-9 rounded-full flex items-center justify-center font-firenight text-base
-                transition-all duration-200 border-2 bg-transparent
+                transition-all duration-200 border-2 bg-[rgba(255,255,255,0.1)]
                 ${
                   step.id === currentStep
                     ? 'text-[#FFEED5] border-[#FFEED5]'
                     : index < currentStepIndex
                     ? 'text-[#66AAA5] border-[#66AAA5]'
-                    : 'text-[#64748B] border-[#64748B]'
+                    : 'text-[#64748B] border-[rgba(255,255,255,0.2)] '
                 }
               `}
             >

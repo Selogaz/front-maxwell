@@ -22,12 +22,16 @@ export default function TestAuthPage() {
     setLastError(null);
 
     try {
-      await fetch('/api/auth/login?test=true', {
+      const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
         credentials: 'include',
       });
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`${response.status} ${response.statusText} — ${text}`);
+      }
       window.location.href = '/test-auth?loggedin=1';
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Ошибка входа';
@@ -44,12 +48,16 @@ export default function TestAuthPage() {
     setLastError(null);
 
     try {
-      await fetch('/api/auth/register?test=true', {
+      const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, nickname: 'ТестовыйПользователь' }),
         credentials: 'include',
       });
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`${response.status} ${response.statusText} — ${text}`);
+      }
       window.location.href = '/test-auth?loggedin=1';
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Ошибка регистрации';
@@ -126,7 +134,8 @@ export default function TestAuthPage() {
       
       <div className="bg-[#1E293B] p-6 rounded-2xl max-w-md mb-6">
         <p className="text-[#94A3B8] mb-4">
-          Тестовый режим API — принимает любые данные
+          Логин через настоящий бэк (test.dndmaxwell.online).
+          Используй свой email/пароль из прода.
         </p>
         
         <div className="space-y-4 mb-4">

@@ -48,7 +48,7 @@
 - CharacterStepsNav — навигация по этапам (кружочки 36x36)
 - CharacterStepsMenu — левое меню
 - CharacterStepContent — контент этапа
-- CharacterRaceStep — экран выбора расы с фоновыми картинками и random кнопкой
+- CharacterRaceStep — экран выбора расы с динамическим названием и описанием
 - CharacterSubRaceStep — экран выбора подрасы
 - CharacterClassStep — экран выбора класса
 - CharacterOriginStep — экран выбора происхождения
@@ -73,59 +73,130 @@ src/
 ├── app/                 # Next.js App Router
 │   ├── api/            # API Routes
 │   │   ├── auth/       # Auth API
-│   │   │   ├── register/route.ts
-│   │   │   ├── login/route.ts
-│   │   │   ├── refresh/route.ts
-│   │   │   └── logout/route.ts
-│   │   └── me/route.ts
-│   ├── (game)/game/    # Группа для игровых страниц
-│   │   ├── character/ # Создание персонажа
-│   │   │   └── sections/  # Секции создания персонажа
-│   │   │       ├── CharacterStepsNav.tsx
-│   │   │       ├── CharacterStepsMenu.tsx
-│   │   │       ├── CharacterStepContent.tsx
-│   │   │       ├── CharacterInfoModal.tsx
-│   │   │       ├── CharacterStatsPanel.tsx
-│   │   │       ├── CharacterPreviewCard.tsx
-│   │   │       ├── CharacterNameStep.tsx
-│   │   │       ├── CharacterGenderStep.tsx
-│   │   │       ├── CharacterRaceStep.tsx
-│   │   │       ├── CharacterSubRaceStep.tsx
-│   │   │       ├── CharacterClassStep.tsx
-│   │   │       ├── CharacterOriginStep.tsx
-│   │   │       ├── CharacterStatsStep.tsx
-│   │   │       ├── CharacterSpellsStep.tsx
-│   │   │       └── CharacterCreationHeader.tsx
-│   │   ├── create/page.tsx
-│   │   ├── character/page.tsx
-│   │   ├── join/page.tsx
-│   │   └── continue/page.tsx
-│   ├── lk/page.tsx
-│   ├── test-auth/page.tsx
-│   └── page.tsx
+│   │   │   ├── register/route.ts     # POST: Регистрация пользователя
+│   │   │   ├── login/route.ts       # POST/GET: Вход/проверка сессии
+│   │   │   ├── refresh/route.ts      # POST: Обновление сессии
+│   │   │   └── logout/route.ts      # POST: Выход из аккаунта
+│   │   ├── me/route.ts              # GET: Получить текущего пользователя
+│   │   ├── header/route.ts          # GET: Данные для шапки
+│   │   ├── greeting/route.ts        # GET: Приветственный блок
+│   │   ├── about/route.ts         # GET: Блок "О проекте"
+│   │   ├── adventures/route.ts     # GET: Приключения (карусель)
+│   │   ├── advantages/route.ts     # GET: Преимущества
+│   │   ├── pricing/route.ts         # GET: Тарифы
+│   │   └── footer/route.ts         # GET: Подвал
+│   ├── (index)/        # Группа главной страницы
+│   │   ├── layout.tsx                # Layout главной страницы
+│   │   └── page.tsx                 # Главная страница
+│   ├── (lk)/          # Группа ЛК
+│   │   ├── layout.tsx                # Layout для ЛК
+│   │   └── lk/page.tsx            # Страница личного кабинета
+│   ├── (game)/game/    # Группа игровых страниц
+│   │   ├── layout.tsx           # Layout для игровых страниц
+│   │   ├── create/page.tsx       # Создание игры (выбор параметров)
+│   │   ├── character/
+│   │   │   ├── layout.tsx       # Layout для создания персонажа
+│   │   │   ├── page.tsx         # Главная страница создания персонажа
+│   │   │   └── sections/
+│   │   │       ├── CharacterStepsNav.tsx              # Навигация по этапам (кружочки 1-8)
+│   │   │       ├── CharacterStepsMenu.tsx             # Левое меню с этапами
+│   │   │       ├── CharacterStepContent.tsx           # Контент текущего этапа
+│   │   │       ├── CharacterStatsPanel.tsx           # Правая панель с характеристиками
+│   │   │       ├── CharacterPreviewCard.tsx          # Карточка превью персонажа
+│   │   │       ├── CharacterNameStep.tsx            # Этап: Имя персонажа
+│   │   │       ├── CharacterGenderStep.tsx             # Этап: Пол персонажа
+│   │   │       ├── CharacterRaceStep.tsx               # Этап: Выбор расы (desktop)
+│   │   │       ├── CharacterRaceStepMobile.tsx        # Этап: Выбор расы (mobile)
+│   │   │       ├── CharacterSubRaceStep.tsx          # Этап: Выбор подрасы (desktop)
+│   │   │       ├── CharacterSubRaceStepMobile.tsx   # Этап: Выбор подрасы (mobile)
+│   │   │       ├── CharacterClassStep.tsx            # Этап: Выбор класса (desktop)
+│   │   │       ├── CharacterClassStepMobile.tsx       # Этап: Выбор класса (mobile)
+│   │   │       ├── CharacterOriginStep.tsx          # Этап: Выбор происхождения (desktop)
+│   │   │       ├── CharacterOriginStepMobile.tsx     # Этап: Выбор происхождения (mobile)
+│   │   │       ├── CharacterStatsStep.tsx             # Этап: Характеристики (desktop)
+│   │   │       ├── CharacterStatsStepMobile.tsx        # Этап: Характеристики (mobile)
+│   │   │       ├── CharacterSpellsStep.tsx            # Этап: Заклинания (desktop)
+│   │   │       ├── CharacterSpellsStepMobile.tsx     # Этап: Заклинания (mobile)
+│   │   │       ├── CharacterCreationHeader.tsx        # Шапка "Создание персонажа"
+│   │   │       └── ClassIconInline.tsx               # Иконка класса (inline)
+│   │   ├── join/page.tsx            # Присоединение к игре
+│   │   └── continue/page.tsx      # Продолжить игру
+│   ├── test-auth/
+│   │   ├── layout.tsx
+│   │   └── page.tsx
+│   ├── layout.tsx
+│   ├── providers.tsx
+│   ├── fonts.ts
+│   └── globals.css
 ├── components/
-│   ├── layouts/        # Header, Footer
+│   ├── layouts/        # Layout компоненты
+│   │   ├── Header.tsx              # Шапка с навигацией и модальными окнами
+│   │   ├── Footer.tsx               # Подвал с логотипом и ссылками
+│   │   ├── CreateCharHeader.tsx         # Шапка создания персонажа
+│   │   └── DefaultLayout.tsx          # Дефолтный layout (заготовка)
 │   ├── sections/       # Секции страниц
 │   │   ├── index/     # Главная страница
-│   │   │   ├── Greeting.tsx
-│   │   │   ├── About.tsx
-│   │   │   ├── Adventures.tsx
-│   │   │   ├── Advantages.tsx
-│   │   │   └── Pricing.tsx
+│   │   │   ├── Greeting.tsx           # Приветственный блок с видео
+│   │   │   ├── About.tsx              # "Как это работает?" с видео
+│   │   │   ├── Adventures.tsx          # Карусель приключений
+│   │   │   ├── Advantages.tsx          # Преимущества в 2 столбика
+│   │   │   └── Pricing.tsx             # Тарифы (3 плана)
 │   │   ├── lk/       # Личный кабинет
-│   │   │   ├── Sidebar.tsx
+│   │   │   ├── Sidebar.tsx             # Боковое меню навигации
 │   │   │   ├── Tabs/
-│   │   │   │   ├── Profile.tsx
-│   │   │   │   └── Settings.tsx
+│   │   │   │   ├── Profile.tsx            # Вкладка профиля
+│   │   │   │   └── Settings.tsx      # Вкладка настроек
 │   │   │   └── modals/
-│   │   │       ├── LogoutModal.tsx
-│   │   │       └── PlayGameModal.tsx
-│   └── ui/             # Переиспользуемые компоненты
-├── context/            # AuthContext для авторизации
-├── hooks/              # Кастомные хуки для работы с API
-├── lib/                # Утилиты (icons)
+│   │   │       ├── LogoutModal.tsx      # Модальное окно выхода
+│   │   │       └── PlayGameModal.tsx   # Модальное окно "Играть"
+│   │   └── game/
+│   │       └── CharacterMenu.tsx         # Меню персонажа
+│   └── ui/             # Переиспользуемые UI компоненты
+│       ├── Button.tsx                 # Кнопка (primary/secondary/ghost)
+│       ├── Card.tsx                  # Карточка
+│       ├── Input.tsx                  # Поле ввода
+│       ├── Modal.tsx                  # Модальное окно
+│       ├── Section.tsx                # Секция контента
+│       ├── Skeleton.tsx               # Загрузочный скелетон
+│       ├── VideoPlaceholder.tsx         # Заглушка видео
+│       ├── ArrowButton.tsx             # Кнопка со стрелкой
+│       ├── PaginationDots.tsx          # Точки пагинации
+│       ├── LoginModal.tsx             # Модальное окно входа
+│       ├── RegisterModal.tsx          # Модальное окно регистрации
+│       └── ResetPasswordModal.tsx      # Модальное окно сброса пароля
+├── context/            # React Context
+│   └── AuthContext.tsx
+├── hooks/              # Кастомные хуки
+│   ├── useHeader.ts
+│   ├── useGreeting.ts
+│   ├── useAbout.ts
+│   ├── useAdventures.ts
+│   ├── useAdvantages.ts
+│   ├── usePricing.ts
+│   ├── useFooter.ts
+│   └── useCharacter.ts
+├── lib/                # Утилиты
+│   └── icons.tsx
 ├── services/           # API сервисы
+│   ├── auth.ts
+│   ├── header.ts
+│   ├── greeting.ts
+│   ├── about.ts
+│   ├── adventures.ts
+│   ├── advantages.ts
+│   ├── pricing.ts
+│   ├── footer.ts
+│   └── character.ts
 └── types/             # TypeScript типы
+    ├── auth.ts
+    ├── header.ts
+    ├── greeting.ts
+    ├── about.ts
+    ├── adventures.ts
+    ├── advantages.ts
+    ├── pricing.ts
+    ├── footer.ts
+    └── character.ts
 ```
 
 ## Разбивка страниц на секции

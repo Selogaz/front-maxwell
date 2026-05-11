@@ -11,6 +11,8 @@ import {
   STATS_POINTS,
   STATS_MAX,
   STATS_MIN,
+  AlignmentOption,
+  ClassSkillItem,
 } from '@/types/character';
 
 interface CharacterStepContentProps {
@@ -22,6 +24,7 @@ interface CharacterStepContentProps {
   onSelectSubRace: (id: string) => void;
   onSelectClass: (id: string) => void;
   onSelectOrigin: (id: string) => void;
+  onSelectAlignment: (id: string) => void;
   onUpdateStats: (stat: keyof CharacterStats, value: number) => void;
   onApplyRecommended: () => void;
   onResetStats: () => void;
@@ -31,6 +34,10 @@ interface CharacterStepContentProps {
   onSetGender?: (gender: 'male' | 'female') => void;
   isFirstStep: boolean;
   isLastStep: boolean;
+  alignmentOptions?: AlignmentOption[];
+  classSkills?: { choose: number; from: ClassSkillItem[] } | null;
+  selectedSkills?: string[];
+  onSelectSkills?: (skillRefs: string[]) => void;
 }
 
 const RaceIcon: React.FC<{ race: string; className?: string }> = ({ race, className }) => {
@@ -65,6 +72,7 @@ const CharacterStepContent: React.FC<CharacterStepContentProps> = ({
   onSelectSubRace,
   onSelectClass,
   onSelectOrigin,
+  onSelectAlignment,
   onUpdateStats,
   onApplyRecommended,
   onResetStats,
@@ -74,6 +82,10 @@ const CharacterStepContent: React.FC<CharacterStepContentProps> = ({
   onSetGender,
   isFirstStep,
   isLastStep,
+  alignmentOptions = [],
+  classSkills,
+  selectedSkills = [],
+  onSelectSkills,
 }) => {
   const [infoModal, setInfoModal] = useState<{
     isOpen: boolean;
@@ -103,6 +115,7 @@ const CharacterStepContent: React.FC<CharacterStepContentProps> = ({
       case 'subrace': return 'Подраса';
       case 'class': return 'Класс';
       case 'origin': return 'Происхождение';
+      case 'alignment': return 'Мировоззрение';
       case 'spells': return 'Заклинания';
       case 'stats': return 'Характеристики';
       default: return '';
@@ -141,7 +154,7 @@ const CharacterStepContent: React.FC<CharacterStepContentProps> = ({
             <img 
               src="/create_char/gender/m_gender_small.svg" 
               alt="Мужской" 
-              className="absolute w-[25px] h-[40px]"
+              className="absolute w-[36px] h-[37px]"
               style={{ 
                 left: '50%', 
                 top: '50%', 
@@ -306,7 +319,7 @@ const CharacterStepContent: React.FC<CharacterStepContentProps> = ({
           const statKey = statInfo.icon as keyof CharacterStats;
           const value = selection.stats[statKey];
           const modifier = Math.floor((value - 10) / 2);
-          const canDecrease = value > STATS_MIN && usedPoints > 0;
+          const canDecrease = value > STATS_MIN;
           const canIncrease = value < STATS_MAX && usedPoints < STATS_POINTS;
 
           return (
@@ -356,6 +369,50 @@ const CharacterStepContent: React.FC<CharacterStepContentProps> = ({
             </div>
           );
         })}
+      </div>
+
+      <div className="mt-6 pt-4 border-t border-[rgba(255,255,255,0.08)]">
+        <h3 className="text-center font-firenight text-[18px] text-[#FFEED5] mb-3">НАВЫКИ С УМЕНИЕМ</h3>
+        {!classSkills ? (
+          <p className="text-center text-[#94A3B8] text-sm">Сначала выберите класс</p>
+        ) : classSkills.from.length === 0 ? (
+          <p className="text-center text-[#94A3B8] text-sm">Нет навыков для выбора</p>
+        ) : (
+          <>
+            <p className="text-center text-[#DDA852] text-sm mb-2">
+              Выберите {classSkills.choose} из {classSkills.from.length}
+            </p>
+            <div className="flex flex-wrap justify-center gap-2">
+              {classSkills.from.map((skill) => {
+                const isSelected = selectedSkills.includes(skill.ref);
+                const canSelect = isSelected || selectedSkills.length < classSkills.choose;
+                return (
+                  <button
+                    key={skill.ref}
+                    type="button"
+                    disabled={!canSelect && !isSelected}
+                    onClick={() => {
+                      if (isSelected) {
+                        onSelectSkills?.(selectedSkills.filter((r) => r !== skill.ref));
+                      } else if (selectedSkills.length < classSkills.choose) {
+                        onSelectSkills?.([...selectedSkills, skill.ref]);
+                      }
+                    }}
+                    className={`px-3 py-1.5 rounded-[5px] text-[13px] transition-colors cursor-pointer border ${
+                      isSelected
+                        ? 'bg-[#66AAA5]/20 border-[#66AAA5] text-white'
+                        : canSelect
+                          ? 'bg-white/5 border-white/10 text-[#94A3B8] hover:bg-white/10 hover:border-white/20'
+                          : 'bg-white/5 border-white/10 text-[#64748B] opacity-40 cursor-not-allowed'
+                    }`}
+                  >
+                    {skill.name}
+                  </button>
+                );
+              })}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
@@ -436,6 +493,23 @@ const CharacterStepContent: React.FC<CharacterStepContentProps> = ({
                 selection.origin?.id === origin.id,
                 () => onSelectOrigin(origin.id),
                 () => openInfoModal(origin.name, `${origin.description}\n\n${origin.bonus}`, origin.imageUrl)
+              )
+            )}
+          </div>
+        );
+
+      case 'alignment':
+        return (
+          <div className="grid grid-cols-3 gap-3 px-4">
+            {alignmentOptions.map((alignment) =>
+              renderOptionCard(
+                alignment.id,
+                alignment.name,
+                alignment.description,
+                undefined,
+                selection.alignment?.id === alignment.id,
+                () => onSelectAlignment(alignment.id),
+                () => openInfoModal(alignment.name, alignment.description)
               )
             )}
           </div>
